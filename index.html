@@ -5,6 +5,7 @@
 <title>Sentence Puzzle</title>
 
 <style>
+
 body {
     font-family: Arial, "Comic Sans MS", sans-serif;
     background:#eaf6f3;
@@ -16,10 +17,6 @@ body {
     margin:auto;
 }
 
-h1 {
-    color:#234;
-}
-
 .section {
     background:white;
     padding:25px;
@@ -27,100 +24,152 @@ h1 {
     margin-bottom:30px;
 }
 
+h1 {
+    color:#234;
+}
+
 .sentence {
-    font-size:32px;
+    font-size:34px;
     font-weight:bold;
 }
 
 button {
-    font-size:22px;
-    padding:12px;
-    border-radius:12px;
+    font-size:24px;
+    padding:12px 20px;
     border:none;
+    border-radius:15px;
     background:#8fc8b7;
-    margin:5px;
+    margin:8px;
+    cursor:pointer;
 }
 
-input {
-    width:100%;
-    font-size:28px;
-    padding:12px;
-}
 
 .word-bank, .target {
+
     min-height:100px;
     padding:15px;
     display:flex;
     flex-wrap:wrap;
     gap:12px;
     border-radius:15px;
+
 }
+
 
 .word-bank {
     background:#dff2eb;
 }
 
+
 .target {
     background:#fff7d6;
 }
 
+
 .word {
+
     background:#b7d9ff;
     padding:15px;
     border-radius:12px;
     font-size:28px;
     cursor:pointer;
+    font-weight:bold;
+
 }
 
+
 .correct {
+
     background:#b8efb8;
+
 }
+
+
+#message {
+
+    font-size:32px;
+    font-weight:bold;
+
+}
+
 </style>
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
+
 <h1>Sentence Puzzle 🔊</h1>
+
+
 
 <div class="section">
 
-<h2>Read the sentence</h2>
+
+<h2>Sentence:</h2>
 
 <div class="sentence" id="sentence"></div>
 
-<button onclick="readSentence()">🔊 Read</button>
+
+<button onclick="readSentence()">
+🔊 Read Sentence
+</button>
+
 
 </div>
 
 
+
+
+
 <div class="section">
+
 
 <h2>Build the sentence</h2>
 
+
 <p>Put the words in order:</p>
+
 
 <div class="word-bank" id="bank"></div>
 
+
 <h3>Your sentence:</h3>
+
 
 <div class="target" id="target"></div>
 
 
-<button onclick="check()">Check ✅</button>
-<button onclick="nextSentence()">Next ➡️</button>
 
-<h2 id="message"></h2>
+<button onclick="check()">
+Check ✅
+</button>
+
+
+<button id="nextButton" onclick="nextSentence()" style="display:none;">
+Keep Going ➡️
+</button>
+
+
+<div id="message"></div>
+
 
 </div>
 
 
+
 </div>
+
+
+
 
 
 <script>
+
 
 const sentences = [
 
@@ -137,48 +186,53 @@ const sentences = [
 ];
 
 
-let number = 0;
+
+let current = 0;
+
 
 
 const speech = window.speechSynthesis;
 
 
+
 function speak(text){
 
-speech.cancel();
+    speech.cancel();
 
-let voice = new SpeechSynthesisUtterance(text);
+    let voice = new SpeechSynthesisUtterance(text);
 
-voice.rate = 0.75;
-voice.pitch = 1;
+    voice.rate = 0.75;
+    voice.pitch = 1;
 
-speech.speak(voice);
+    speech.speak(voice);
 
 }
+
 
 
 
 function readSentence(){
 
-speak(sentences[number]);
+    speak(sentences[current]);
 
 }
 
 
 
-let words=[];
 
 
-function loadPuzzle(){
-
-let text = sentences[number];
-
-document.getElementById("sentence").textContent=text;
+function loadGame(){
 
 
-words=text.split(" ");
+document.getElementById("sentence").textContent =
+sentences[current];
 
-words.sort(()=>Math.random()-0.5);
+
+document.getElementById("message").textContent="";
+
+
+document.getElementById("nextButton").style.display="none";
+
 
 
 let bank=document.getElementById("bank");
@@ -190,20 +244,35 @@ bank.innerHTML="";
 target.innerHTML="";
 
 
-words.forEach(word=>{
-
-let piece=document.createElement("div");
-
-piece.className="word";
-
-piece.textContent=word;
+target.classList.remove("correct");
 
 
-piece.onclick=function(){
 
-if(piece.parentNode==bank){
+let pieces = sentences[current].split(" ");
 
-target.appendChild(piece);
+
+pieces.sort(()=>Math.random()-0.5);
+
+
+
+pieces.forEach(word=>{
+
+
+let tile=document.createElement("div");
+
+
+tile.className="word";
+
+tile.textContent=word;
+
+
+
+tile.onclick=function(){
+
+
+if(tile.parentNode==bank){
+
+target.appendChild(tile);
 
 speak(word);
 
@@ -211,73 +280,120 @@ speak(word);
 
 else{
 
-bank.appendChild(piece);
+bank.appendChild(tile);
 
 }
+
 
 };
 
 
-bank.appendChild(piece);
+
+bank.appendChild(tile);
+
 
 
 });
 
 
+
 }
+
+
 
 
 
 function check(){
 
+
 let made=[...document.getElementById("target").children]
+
 .map(x=>x.textContent)
+
 .join(" ");
 
 
-if(made==sentences[number]){
 
-document.getElementById("message").textContent=
-"Great job! 🎉";
+if(made == sentences[current]){
 
-speak("Great job");
+
+document.getElementById("message").textContent =
+"🎉 Great job!";
+
 
 document.getElementById("target").classList.add("correct");
+
+
+speak("Great job!");
+
+
+
+document.getElementById("nextButton").style.display =
+"inline-block";
+
+
 
 }
 
 else{
 
-document.getElementById("message").textContent=
+
+document.getElementById("message").textContent =
 "Try again";
+
 
 speak("Try again");
 
-}
+
 
 }
+
+
+}
+
+
+
 
 
 
 function nextSentence(){
 
-number++;
 
-if(number>=sentences.length){
+current++;
 
-number=0;
+
+
+if(current >= sentences.length){
+
+
+current=0;
+
+
+document.getElementById("message").textContent =
+"You finished all the puzzles! 🎉";
+
+
+speak("You finished all the puzzles");
+
+
+return;
+
 
 }
 
-loadPuzzle();
 
-document.getElementById("message").textContent="";
+
+loadGame();
+
 
 }
 
 
 
-loadPuzzle();
+
+
+loadGame();
+
 
 
 </script>
