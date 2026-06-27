@@ -24,7 +24,10 @@ box-shadow:0 3px 10px #aaa;
 
 h1{color:#234;}
 
-.sentence{font-size:34px;font-weight:bold;}
+.sentence{
+font-size:34px;
+font-weight:bold;
+}
 
 button{
 font-size:22px;
@@ -55,6 +58,7 @@ border-radius:12px;
 font-size:28px;
 font-weight:bold;
 cursor:pointer;
+user-select:none;
 }
 
 .correct{background:#b8efb8;}
@@ -117,7 +121,9 @@ Keep Going ➡️
 
 <div id="typingMessage"></div>
 
-<button onclick="nextTyping()">Next Typing ➡️</button>
+<button id="nextTypingBtn" onclick="nextTyping()" style="display:none;">
+Next Typing ➡️
+</button>
 
 </div>
 
@@ -138,14 +144,14 @@ let typingIndex=0;
 
 const speech=window.speechSynthesis;
 
-function speak(t){
+function speak(text){
 speech.cancel();
-let u=new SpeechSynthesisUtterance(t);
+let u=new SpeechSynthesisUtterance(text);
 u.rate=0.75;
 speech.speak(u);
 }
 
-/* ---------------- PUZZLE ---------------- */
+/* ---------------- PUZZLES ---------------- */
 
 function readSentence(){
 speak(sentences[puzzleIndex]);
@@ -167,6 +173,8 @@ let target=document.getElementById("target");
 
 bank.innerHTML="";
 target.innerHTML="";
+
+target.classList.remove("correct");
 
 let words=sentences[puzzleIndex].split(" ");
 words.sort(()=>Math.random()-0.5);
@@ -212,12 +220,10 @@ document.getElementById("nextButton").style.display="inline-block";
 }
 else{
 document.getElementById("message").textContent="Try again";
-speak("Try again");   // ✅ FIXED
+speak("Try again");
 }
 
 }
-
-/* ---------------- PUZZLE FLOW ---------------- */
 
 function nextPuzzle(){
 
@@ -232,6 +238,7 @@ typingIndex=0;
 loadTyping();
 
 speak("You finished puzzles. Now let's do typing.");
+
 return;
 
 }
@@ -242,7 +249,7 @@ loadPuzzle();
 
 /* ---------------- TYPING ---------------- */
 
-let typingLocked=false;
+let lastWord="";
 
 function loadTyping(){
 
@@ -255,7 +262,9 @@ sentences[typingIndex];
 document.getElementById("typingBox").value="";
 document.getElementById("typingMessage").textContent="";
 
-typingLocked=false;
+document.getElementById("nextTypingBtn").style.display="none";
+
+lastWord="";
 
 }
 
@@ -263,15 +272,14 @@ function readTyping(){
 speak(sentences[typingIndex]);
 }
 
-/* SAFE WORD SPEECH */
-let lastWord="";
-
+/* ONLY FULL WORD SPEECH */
 document.getElementById("typingBox").addEventListener("input",function(){
 
 let text=this.value;
 let words=text.trim().split(/\s+/);
 let last=words[words.length-1];
 
+// only speak full word AFTER space
 if(text.endsWith(" ") && last && last!==lastWord && last.length>1){
 lastWord=last;
 speak(last);
@@ -279,13 +287,9 @@ speak(last);
 
 });
 
-/* FIXED: must complete correctly before next allowed */
+/* LOCKED PROGRESSION */
 
 function nextTyping(){
-
-if(typingLocked){
-return;
-}
 
 let input=document.getElementById("typingBox").value.trim().toLowerCase();
 let correct=sentences[typingIndex].toLowerCase();
@@ -299,7 +303,7 @@ return;
 document.getElementById("typingMessage").textContent="🎉 Great typing!";
 speak("Great typing");
 
-typingLocked=true;
+document.getElementById("nextTypingBtn").style.display="inline-block";
 
 typingIndex++;
 
