@@ -7,7 +7,6 @@
 
 <title>Sentence Puzzle</title>
 
-
 <style>
 
 body {
@@ -16,12 +15,10 @@ body {
     padding:30px;
 }
 
-
 .container {
     max-width:900px;
     margin:auto;
 }
-
 
 .section {
     background:white;
@@ -31,20 +28,16 @@ body {
     box-shadow:0 4px 12px #aaa;
 }
 
-
 h1 {
     color:#234;
 }
-
 
 .sentence {
     font-size:34px;
     font-weight:bold;
 }
 
-
 button {
-
     font-size:24px;
     padding:12px 20px;
     margin:8px;
@@ -52,89 +45,54 @@ button {
     border-radius:15px;
     background:#8fc8b7;
     cursor:pointer;
-
 }
-
-
-button:hover {
-
-    background:#6fb09e;
-
-}
-
-
 
 .word-bank, .target {
-
     min-height:100px;
     display:flex;
     flex-wrap:wrap;
     gap:12px;
     padding:15px;
     border-radius:15px;
-
 }
-
-
 
 .word-bank {
-
     background:#dff2eb;
-
 }
-
-
 
 .target {
-
     background:#fff7d6;
-
 }
 
-
-
 .word {
-
     background:#b7d9ff;
     padding:15px 20px;
     border-radius:12px;
     font-size:28px;
     font-weight:bold;
     cursor:pointer;
-
 }
-
-
-
-.word:hover {
-
-    background:#90bdf0;
-
-}
-
-
 
 .correct {
-
     background:#b8efb8;
-
 }
 
-
+input {
+    width:100%;
+    font-size:28px;
+    padding:12px;
+    border-radius:12px;
+    border:3px solid #9fb;
+}
 
 #message {
-
-    font-size:32px;
+    font-size:30px;
     font-weight:bold;
-    margin-top:20px;
-
 }
-
 
 </style>
 
 </head>
-
 
 
 <body>
@@ -149,9 +107,7 @@ button:hover {
 
 <div class="section">
 
-
 <h2>Sentence</h2>
-
 
 <div id="sentence" class="sentence"></div>
 
@@ -160,30 +116,22 @@ button:hover {
 🔊 Read Sentence
 </button>
 
-
 </div>
-
 
 
 
 
 <div class="section">
 
-
 <h2>Build the sentence</h2>
-
-
-<p>Put the words in the correct order.</p>
 
 
 <div id="bank" class="word-bank"></div>
 
 
-<h3>Your Sentence:</h3>
-
+<h3>Your Sentence</h3>
 
 <div id="target" class="target"></div>
-
 
 
 <button onclick="check()">
@@ -196,15 +144,43 @@ Keep Going ➡️
 </button>
 
 
-
 <div id="message"></div>
 
+</div>
+
+
+
+
+
+<!-- TYPING PART -->
+
+<div class="section" id="typingSection" style="display:none;">
+
+
+<h2>Typing Practice ✏️</h2>
+
+
+<div id="typingSentence" class="sentence"></div>
+
+
+<button onclick="readTyping()">
+🔊 Read Sentence
+</button>
+
+
+<input id="typingBox" placeholder="Type the sentence here...">
+
+
+<div id="typingMessage"></div>
+
 
 </div>
 
 
 
+
 </div>
+
 
 
 
@@ -215,21 +191,15 @@ Keep Going ➡️
 
 const sentences = [
 
-
 "I like to eat watermelon every day",
-
 
 "My name is Adi",
 
-
 "I love pasta to eat when appa makes it",
-
 
 "My brothers name is Sid",
 
-
 "I go to CABI school"
-
 
 ];
 
@@ -243,20 +213,16 @@ const speech = window.speechSynthesis;
 
 
 
-
 function speak(text){
 
-    speech.cancel();
+speech.cancel();
 
+let voice = new SpeechSynthesisUtterance(text);
 
-    let voice = new SpeechSynthesisUtterance(text);
+voice.rate = 0.75;
+voice.pitch = 1;
 
-
-    voice.rate = 0.75;
-    voice.pitch = 1;
-
-
-    speech.speak(voice);
+speech.speak(voice);
 
 }
 
@@ -266,10 +232,9 @@ function speak(text){
 
 function readSentence(){
 
-    speak(sentences[current]);
+speak(sentences[current]);
 
 }
-
 
 
 
@@ -279,93 +244,79 @@ function readSentence(){
 function loadGame(){
 
 
-    document.getElementById("sentence").textContent =
-    sentences[current];
+document.getElementById("sentence").textContent =
+sentences[current];
 
 
-    document.getElementById("message").textContent="";
+document.getElementById("message").textContent="";
 
 
-    document.getElementById("nextButton").style.display="none";
-
-
-    let bank =
-    document.getElementById("bank");
-
-
-    let target =
-    document.getElementById("target");
-
-
-    bank.innerHTML="";
-    target.innerHTML="";
-
-
-    target.classList.remove("correct");
+document.getElementById("nextButton").style.display="none";
 
 
 
-    let words =
-    sentences[current].split(" ");
+let bank=document.getElementById("bank");
+
+let target=document.getElementById("target");
+
+
+bank.innerHTML="";
+target.innerHTML="";
+
+
+target.classList.remove("correct");
 
 
 
-    words.sort(()=>Math.random()-0.5);
+let words = sentences[current].split(" ");
+
+
+words.sort(()=>Math.random()-0.5);
 
 
 
-
-    words.forEach(word=>{
-
-
-        let piece =
-        document.createElement("div");
+words.forEach(word=>{
 
 
-        piece.className="word";
+let tile=document.createElement("div");
 
 
-        piece.textContent=word;
+tile.className="word";
+
+tile.textContent=word;
 
 
 
-
-        piece.onclick=function(){
-
-
-            if(piece.parentNode==bank){
+tile.onclick=function(){
 
 
-                target.appendChild(piece);
+if(tile.parentNode==bank){
 
+target.appendChild(tile);
 
-                speak(word);
-
-
-            }
-            else {
-
-
-                bank.appendChild(piece);
-
-
-            }
-
-
-        };
-
-
-
-        bank.appendChild(piece);
-
-
-
-    });
-
-
+speak(word);
 
 }
 
+else{
+
+bank.appendChild(tile);
+
+}
+
+
+};
+
+
+
+bank.appendChild(tile);
+
+
+
+});
+
+
+}
 
 
 
@@ -376,35 +327,19 @@ function loadGame(){
 function check(){
 
 
-
 let made =
 [...document.getElementById("target").children]
-
-
 .map(x=>x.textContent.trim())
-
-
 .join(" ")
-
-
 .trim()
-
-
 .toLowerCase();
-
-
 
 
 
 let correct =
 sentences[current]
-
-
 .trim()
-
-
 .toLowerCase();
-
 
 
 
@@ -412,40 +347,35 @@ sentences[current]
 if(made === correct){
 
 
-
-    document.getElementById("message").textContent =
-    "🎉 Great job!";
-
-
-    document.getElementById("target")
-    .classList.add("correct");
+document.getElementById("message").textContent =
+"🎉 Great job!";
 
 
+document.getElementById("target")
+.classList.add("correct");
 
-    speak("Great job!");
+
+speak("Great job!");
 
 
 
-    document.getElementById("nextButton")
-    .style.display="inline-block";
-
+document.getElementById("nextButton")
+.style.display="inline-block";
 
 
 }
 
-else {
+else{
 
 
+document.getElementById("message").textContent =
+"Try again";
 
-    document.getElementById("message").textContent =
-    "Try again";
 
-
-    speak("Try again");
+speak("Try again");
 
 
 }
-
 
 
 }
@@ -459,9 +389,7 @@ else {
 function nextSentence(){
 
 
-
 current++;
-
 
 
 
@@ -471,13 +399,21 @@ if(current >= sentences.length){
 
 document.getElementById("message")
 .textContent =
-"You finished all the puzzles! 🎉";
+"You finished all the puzzles! 🎉 Now let's do some typing.";
 
 
-speak("You finished all the puzzles");
+speak("You finished all the puzzles. Now let's do some typing.");
 
 
-current=0;
+
+document.getElementById("typingSection")
+.style.display="block";
+
+
+
+document.getElementById("typingSentence")
+.textContent =
+sentences[0];
 
 
 return;
@@ -490,8 +426,57 @@ return;
 loadGame();
 
 
+}
+
+
+
+
+
+
+
+
+function readTyping(){
+
+speak(
+document.getElementById("typingSentence").textContent
+);
 
 }
+
+
+
+
+document.getElementById("typingBox")
+.addEventListener("input", function(){
+
+
+let typed =
+this.value.trim().toLowerCase();
+
+
+let answer =
+document.getElementById("typingSentence")
+.textContent
+.toLowerCase();
+
+
+
+if(typed === answer){
+
+
+document.getElementById("typingMessage")
+.textContent =
+"🎉 Great typing!";
+
+
+speak("Great typing");
+
+
+}
+
+
+});
+
 
 
 
@@ -503,7 +488,6 @@ loadGame();
 
 
 </script>
-
 
 
 </body>
