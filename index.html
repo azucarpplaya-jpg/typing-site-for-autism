@@ -87,6 +87,7 @@ font-weight:bold;
 
 <h1>Sentence Puzzle + Typing 🔊</h1>
 
+<!-- PUZZLES -->
 <div class="section" id="puzzleArea">
 
 <h2 id="counter"></h2>
@@ -110,6 +111,7 @@ Keep Going ➡️
 
 </div>
 
+<!-- TYPING -->
 <div class="section" id="typingArea" style="display:none;">
 
 <h2>Typing Practice ✏️</h2>
@@ -123,6 +125,8 @@ Keep Going ➡️
 <input id="typingBox" placeholder="Type here...">
 
 <div id="typingMessage"></div>
+
+<button onclick="nextTyping()">Next Typing ➡️</button>
 
 </div>
 
@@ -149,6 +153,8 @@ let u=new SpeechSynthesisUtterance(t);
 u.rate=0.75;
 speech.speak(u);
 }
+
+/* ---------------- PUZZLES ---------------- */
 
 function readSentence(){
 speak(sentences[puzzleIndex]);
@@ -185,8 +191,7 @@ piece.onclick=function(){
 if(piece.parentNode===bank){
 target.appendChild(piece);
 speak(word);
-}
-else{
+}else{
 bank.appendChild(piece);
 speak(word);
 }
@@ -210,11 +215,9 @@ let made=[...document.getElementById("target").children]
 let answer=sentences[puzzleIndex].toLowerCase();
 
 if(made===answer){
-
 document.getElementById("message").textContent="🎉 Great job!";
 speak("Great job!");
 document.getElementById("nextButton").style.display="inline-block";
-
 }else{
 document.getElementById("message").textContent="Try again";
 speak("Try again");
@@ -232,10 +235,9 @@ document.getElementById("puzzleArea").style.display="none";
 document.getElementById("typingArea").style.display="block";
 
 typingIndex=0;
-
 loadTyping();
 
-speak("You finished all puzzles. Now let's do typing.");
+speak("You finished puzzles. Now let's do typing.");
 
 return;
 
@@ -264,24 +266,42 @@ function readTyping(){
 speak(sentences[typingIndex]);
 }
 
-let lastWord="";
+/* SAFE WORD SPEECH (ONLY FULL WORDS) */
+let lastSpoken="";
 
 document.getElementById("typingBox").addEventListener("input",function(){
 
-let words=this.value.split(" ");
-let newest=words[words.length-1];
+let text=this.value;
+let words=text.trim().split(/\s+/);
+let last=words[words.length-1];
 
-if(newest && newest!==lastWord){
-lastWord=newest;
-speak(newest);
+// ONLY speak when a full word is completed (space pressed)
+if(text.endsWith(" ") && last && last!==lastSpoken && last.length>1){
+lastSpoken=last;
+speak(last);
 }
 
-if(this.value.trim().toLowerCase()===sentences[typingIndex].toLowerCase()){
+// full sentence check
+if(text.trim().toLowerCase()===sentences[typingIndex].toLowerCase()){
 document.getElementById("typingMessage").textContent="🎉 Great typing!";
 speak("Great typing");
 }
 
 });
+
+function nextTyping(){
+
+typingIndex++;
+
+if(typingIndex>=sentences.length){
+typingIndex=0;
+speak("You finished typing");
+return;
+}
+
+loadTyping();
+
+}
 
 loadPuzzle();
 
