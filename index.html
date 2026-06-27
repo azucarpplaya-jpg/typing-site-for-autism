@@ -174,8 +174,6 @@ let target=document.getElementById("target");
 bank.innerHTML="";
 target.innerHTML="";
 
-target.classList.remove("correct");
-
 let words=sentences[puzzleIndex].split(" ");
 words.sort(()=>Math.random()-0.5);
 
@@ -268,21 +266,31 @@ lastWord="";
 
 }
 
+/* READ FULL SENTENCE */
 function readTyping(){
 speak(sentences[typingIndex]);
 }
 
-/* ONLY FULL WORD SPEECH */
+/* WORD SPEECH (ONLY FULL WORDS) */
 document.getElementById("typingBox").addEventListener("input",function(){
 
 let text=this.value;
 let words=text.trim().split(/\s+/);
 let last=words[words.length-1];
 
-// only speak full word AFTER space
 if(text.endsWith(" ") && last && last!==lastWord && last.length>1){
 lastWord=last;
 speak(last);
+}
+
+});
+
+/* ENTER KEY FIX (IMPORTANT) */
+document.getElementById("typingBox").addEventListener("keydown",function(e){
+
+if(e.key==="Enter"){
+e.preventDefault();
+nextTyping();
 }
 
 });
@@ -303,20 +311,8 @@ return;
 document.getElementById("typingMessage").textContent="🎉 Great typing!";
 speak("Great typing");
 
+/* SHOW BUTTON ONLY AFTER CORRECT */
 document.getElementById("nextTypingBtn").style.display="inline-block";
-
-typingIndex++;
-
-setTimeout(()=>{
-
-if(typingIndex>=sentences.length){
-speak("You finished everything");
-return;
-}
-
-loadTyping();
-
-},1200);
 
 }
 
