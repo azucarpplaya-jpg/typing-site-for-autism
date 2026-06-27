@@ -3,91 +3,87 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Sentence Puzzle</title>
+<title>Sentence Learning</title>
 
 <style>
 
-body {
-    font-family: Arial, "Comic Sans MS", sans-serif;
-    background:#eaf6f3;
-    padding:30px;
+body{
+font-family:Arial,"Comic Sans MS",sans-serif;
+background:#eaf6f3;
+padding:25px;
 }
 
-.container {
-    max-width:900px;
-    margin:auto;
+.container{
+max-width:900px;
+margin:auto;
 }
 
-.section {
-    background:white;
-    padding:25px;
-    border-radius:20px;
-    margin-bottom:30px;
-    box-shadow:0 4px 12px #aaa;
+.section{
+background:white;
+padding:25px;
+border-radius:20px;
+margin-bottom:25px;
+box-shadow:0 3px 10px #aaa;
 }
 
-h1 {
-    color:#234;
+h1{
+color:#234;
 }
 
-.sentence {
-    font-size:34px;
-    font-weight:bold;
+.sentence{
+font-size:34px;
+font-weight:bold;
 }
 
-button {
-    font-size:24px;
-    padding:12px 20px;
-    margin:8px;
-    border:none;
-    border-radius:15px;
-    background:#8fc8b7;
-    cursor:pointer;
+button{
+font-size:22px;
+padding:12px 20px;
+border:none;
+border-radius:15px;
+background:#8fc8b7;
+cursor:pointer;
+margin:5px;
 }
 
-.word-bank, .target {
-    min-height:100px;
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
-    padding:15px;
-    border-radius:15px;
+.word-bank,.target{
+min-height:90px;
+display:flex;
+flex-wrap:wrap;
+gap:12px;
+padding:15px;
+border-radius:15px;
 }
 
-.word-bank {
-    background:#dff2eb;
+.word-bank{
+background:#dff2eb;
 }
 
-.target {
-    background:#fff7d6;
+.target{
+background:#fff7d6;
 }
 
-.word {
-    background:#b7d9ff;
-    padding:15px 20px;
-    border-radius:12px;
-    font-size:28px;
-    font-weight:bold;
-    cursor:pointer;
+.word{
+background:#b7d9ff;
+padding:15px;
+border-radius:12px;
+font-size:28px;
+font-weight:bold;
+cursor:pointer;
 }
 
-.correct {
-    background:#b8efb8;
+.correct{
+background:#b8efb8;
 }
 
-input {
-    width:100%;
-    font-size:28px;
-    padding:12px;
-    border-radius:12px;
-    border:3px solid #9fb;
+input{
+width:100%;
+font-size:28px;
+padding:12px;
 }
 
-#message {
-    font-size:30px;
-    font-weight:bold;
+#message,#typingMessage{
+font-size:28px;
+font-weight:bold;
 }
 
 </style>
@@ -104,24 +100,23 @@ input {
 <h1>Sentence Puzzle 🔊</h1>
 
 
-
 <div class="section">
 
-<h2>Sentence</h2>
+<h2 id="number"></h2>
 
 <div id="sentence" class="sentence"></div>
 
-
 <button onclick="readSentence()">
-🔊 Read Sentence
+🔊 Read
 </button>
+
 
 </div>
 
 
 
+<div class="section" id="puzzleArea">
 
-<div class="section">
 
 <h2>Build the sentence</h2>
 
@@ -129,7 +124,8 @@ input {
 <div id="bank" class="word-bank"></div>
 
 
-<h3>Your Sentence</h3>
+<h3>Your sentence:</h3>
+
 
 <div id="target" class="target"></div>
 
@@ -139,20 +135,18 @@ Check ✅
 </button>
 
 
-<button id="nextButton" onclick="nextSentence()" style="display:none;">
+<button id="nextButton" onclick="nextPuzzle()" style="display:none;">
 Keep Going ➡️
 </button>
 
 
 <div id="message"></div>
 
+
 </div>
 
 
 
-
-
-<!-- TYPING PART -->
 
 <div class="section" id="typingSection" style="display:none;">
 
@@ -164,11 +158,11 @@ Keep Going ➡️
 
 
 <button onclick="readTyping()">
-🔊 Read Sentence
+🔊 Read
 </button>
 
 
-<input id="typingBox" placeholder="Type the sentence here...">
+<input id="typingBox" placeholder="Type here...">
 
 
 <div id="typingMessage"></div>
@@ -178,9 +172,7 @@ Keep Going ➡️
 
 
 
-
 </div>
-
 
 
 
@@ -189,7 +181,7 @@ Keep Going ➡️
 <script>
 
 
-const sentences = [
+const sentences=[
 
 "I like to eat watermelon every day",
 
@@ -205,11 +197,10 @@ const sentences = [
 
 
 
-let current = 0;
+let current=0;
 
 
-
-const speech = window.speechSynthesis;
+const speech=window.speechSynthesis;
 
 
 
@@ -217,12 +208,12 @@ function speak(text){
 
 speech.cancel();
 
-let voice = new SpeechSynthesisUtterance(text);
+let u=new SpeechSynthesisUtterance(text);
 
-voice.rate = 0.75;
-voice.pitch = 1;
+u.rate=.75;
+u.pitch=1;
 
-speech.speak(voice);
+speech.speak(u);
 
 }
 
@@ -241,10 +232,15 @@ speak(sentences[current]);
 
 
 
-function loadGame(){
+
+function loadPuzzle(){
 
 
-document.getElementById("sentence").textContent =
+document.getElementById("number").textContent=
+"Puzzle "+(current+1)+" of "+sentences.length;
+
+
+document.getElementById("sentence").textContent=
 sentences[current];
 
 
@@ -256,7 +252,6 @@ document.getElementById("nextButton").style.display="none";
 
 
 let bank=document.getElementById("bank");
-
 let target=document.getElementById("target");
 
 
@@ -264,22 +259,21 @@ bank.innerHTML="";
 target.innerHTML="";
 
 
-target.classList.remove("correct");
+target.className="target";
 
 
 
-let words = sentences[current].split(" ");
+let pieces=sentences[current].split(" ");
 
 
-words.sort(()=>Math.random()-0.5);
+pieces.sort(()=>Math.random()-0.5);
 
 
 
-words.forEach(word=>{
+pieces.forEach(word=>{
 
 
 let tile=document.createElement("div");
-
 
 tile.className="word";
 
@@ -316,7 +310,9 @@ bank.appendChild(tile);
 });
 
 
+
 }
+
 
 
 
@@ -327,27 +323,25 @@ bank.appendChild(tile);
 function check(){
 
 
-let made =
-[...document.getElementById("target").children]
-.map(x=>x.textContent.trim())
+
+let made=[...document.getElementById("target").children]
+.map(x=>x.textContent)
 .join(" ")
 .trim()
 .toLowerCase();
 
 
 
-let correct =
-sentences[current]
+let answer=sentences[current]
 .trim()
 .toLowerCase();
 
 
 
+if(made===answer){
 
-if(made === correct){
 
-
-document.getElementById("message").textContent =
+document.getElementById("message").textContent=
 "🎉 Great job!";
 
 
@@ -363,12 +357,11 @@ document.getElementById("nextButton")
 .style.display="inline-block";
 
 
-}
 
-else{
+}else{
 
 
-document.getElementById("message").textContent =
+document.getElementById("message").textContent=
 "Try again";
 
 
@@ -386,19 +379,23 @@ speak("Try again");
 
 
 
-function nextSentence(){
+
+function nextPuzzle(){
 
 
 current++;
 
 
 
-if(current >= sentences.length){
+if(current>=sentences.length){
 
+
+document.getElementById("puzzleArea")
+.style.display="none";
 
 
 document.getElementById("message")
-.textContent =
+.textContent=
 "You finished all the puzzles! 🎉 Now let's do some typing.";
 
 
@@ -410,10 +407,10 @@ document.getElementById("typingSection")
 .style.display="block";
 
 
-
 document.getElementById("typingSentence")
-.textContent =
+.textContent=
 sentences[0];
+
 
 
 return;
@@ -423,11 +420,10 @@ return;
 
 
 
-loadGame();
+loadPuzzle();
 
 
 }
-
 
 
 
@@ -446,26 +442,25 @@ document.getElementById("typingSentence").textContent
 
 
 
+
 document.getElementById("typingBox")
-.addEventListener("input", function(){
+.addEventListener("input",function(){
 
 
-let typed =
-this.value.trim().toLowerCase();
+let typed=this.value.trim().toLowerCase();
 
 
-let answer =
-document.getElementById("typingSentence")
+let correct=document.getElementById("typingSentence")
 .textContent
 .toLowerCase();
 
 
 
-if(typed === answer){
+if(typed===correct){
 
 
 document.getElementById("typingMessage")
-.textContent =
+.textContent=
 "🎉 Great typing!";
 
 
@@ -481,9 +476,7 @@ speak("Great typing");
 
 
 
-
-
-loadGame();
+loadPuzzle();
 
 
 
