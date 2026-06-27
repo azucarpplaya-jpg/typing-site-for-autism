@@ -1,0 +1,390 @@
+index.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing & Sentence Puzzle</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, "Comic Sans MS", sans-serif;
+            background: #eaf6f3;
+            color: #222;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h1,
+        h2 {
+            color: #234;
+        }
+
+        .section {
+            background: #f8fcfb;
+            padding: 20px;
+            border-radius: 18px;
+            margin-bottom: 35px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+        }
+
+        .sentence {
+            font-size: 34px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        button {
+            font-size: 22px;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            background: #8fc8b7;
+            color: #122;
+            margin: 8px;
+        }
+
+        button:hover {
+            background: #79b5a4;
+        }
+
+        input {
+            width: 100%;
+            font-size: 30px;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 12px;
+            border: 3px solid #9fb;
+            box-sizing: border-box;
+        }
+
+        .instructions {
+            font-size: 22px;
+        }
+
+        .word-bank,
+        .target {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            min-height: 90px;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .word-bank {
+            background: #dff2eb;
+        }
+
+        .target {
+            background: #fff7d6;
+            border: 3px dashed #888;
+        }
+
+        .word {
+            background: #b7d9ff;
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-size: 28px;
+            cursor: grab;
+            user-select: none;
+            font-weight: bold;
+        }
+
+        .word:hover {
+            background: #99c6f8;
+        }
+
+        .correct {
+            background: #b8efb8 !important;
+        }
+
+        .incorrect {
+            background: #ffd1d1 !important;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 30px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Typing and Sentence Puzzle</h1>
+
+        <div class="section">
+            <h2>Part 1 - Typing Practice</h2>
+
+            <div class="sentence" id="displaySentence"></div>
+
+            <button id="speakSentence">
+                🔊 Read Sentence
+            </button>
+
+            <input id="typingBox" placeholder="Type the sentence here...">
+        </div>
+
+        <div class="section">
+
+            <h2>Part 2 - Build the Sentence</h2>
+
+            <div class="instructions">
+                Drag or click the words into the yellow box in the correct order.
+            </div>
+
+            <div class="word-bank" id="bank"></div>
+
+            <h3>Your Sentence</h3>
+
+            <div class="target" id="target"></div>
+
+            <button id="check">Check Answer</button>
+            <button id="reset">Reset Puzzle</button>
+
+            <div class="message" id="message"></div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const fullSentence = "The little bird sings a happy song every morning.";
+
+        document.getElementById("displaySentence").textContent = fullSentence;
+
+        const synth = window.speechSynthesis;
+
+        function speak(text) {
+            synth.cancel();
+
+            const u = new SpeechSynthesisUtterance(text);
+            u.rate = 0.8;
+            u.pitch = 1;
+
+            synth.speak(u);
+        }
+
+        document.getElementById("speakSentence").onclick = () => {
+            speak(fullSentence);
+        };
+
+        /////////////////////////////////////////////////////
+        // Typing Practice
+        /////////////////////////////////////////////////////
+
+        const typing = document.getElementById("typingBox");
+
+        let lastWord = "";
+
+        typing.addEventListener("keyup", e => {
+
+            if (
+                e.key === " " ||
+                e.key === "." ||
+                e.key === "," ||
+                e.key === "!" ||
+                e.key === "?"
+            ) {
+
+                // FIXED: Split by spaces and periods to accurately read out the last word
+
+                let wordsTyped = typing.value.trim().split(/[\s.]+/);
+
+                if (wordsTyped.length) {
+
+                    let newest = wordsTyped[wordsTyped.length - 1];
+
+                    newest = newest.replace(/[.,!?]/g, "");
+
+                    if (newest && newest !== lastWord) {
+
+                        lastWord = newest;
+
+                        speak(newest);
+
+                    }
+                }
+            }
+        });
+
+        /////////////////////////////////////////////////////
+        // Puzzle
+        /////////////////////////////////////////////////////
+
+        const bank = document.getElementById("bank");
+        const target = document.getElementById("target");
+
+        // FIXED: Correctly splits the sentence into whole words instead of characters
+
+        let words = fullSentence.replace(/[.]/g, "").split(" ");
+
+        let originalWords = [...words];
+
+        shuffle(words);
+
+        function makeTile(word) {
+
+            const d = document.createElement("div");
+
+            d.className = "word";
+            d.textContent = word;
+            d.draggable = true;
+
+            d.addEventListener("dragstart", e => {
+
+                e.dataTransfer.setData("text/plain", word);
+                e.dataTransfer.setData("id", Math.random());
+
+                currentDrag = d;
+
+            });
+
+            d.addEventListener("click", () => {
+
+                moveTile(d);
+
+            });
+
+            return d;
+        }
+
+        function render() {
+
+            bank.innerHTML = "";
+
+            words.forEach(w => {
+
+                bank.appendChild(makeTile(w));
+
+            });
+
+        }
+
+        render();
+
+        let currentDrag = null;
+
+        bank.addEventListener("dragover", e => e.preventDefault());
+
+        target.addEventListener("dragover", e => e.preventDefault());
+
+        target.addEventListener("drop", e => {
+
+            e.preventDefault();
+
+            if (currentDrag) {
+
+                target.appendChild(currentDrag);
+
+                currentDrag = null;
+
+            }
+
+        });
+
+        bank.addEventListener("drop", e => {
+
+            e.preventDefault();
+
+            if (currentDrag) {
+
+                bank.appendChild(currentDrag);
+
+                currentDrag = null;
+
+            }
+
+        });
+
+        function moveTile(tile) {
+
+            if (tile.parentNode === bank) {
+
+                target.appendChild(tile);
+
+            } else {
+
+                bank.appendChild(tile);
+
+            }
+
+        }
+
+        document.getElementById("check").onclick = () => {
+
+            const built = [...target.children].map(x => x.textContent);
+
+            const correct = fullSentence.replace(/[.]/g, "").split(" ");
+
+            const msg = document.getElementById("message");
+
+            if (JSON.stringify(built) === JSON.stringify(correct)) {
+
+                target.classList.remove("incorrect");
+                target.classList.add("correct");
+
+                msg.textContent = "🎉 Great job! You built the sentence correctly!";
+
+                speak("Great job!");
+
+            } else {
+
+                target.classList.remove("correct");
+                target.classList.add("incorrect");
+
+                msg.textContent = "Try again.";
+
+                speak("Try again.");
+
+            }
+
+        };
+
+        document.getElementById("reset").onclick = () => {
+
+            target.innerHTML = "";
+
+            document.getElementById("message").textContent = "";
+
+            target.classList.remove("correct", "incorrect");
+
+            words = [...originalWords];
+
+            shuffle(words);
+
+            render();
+
+        };
+
+        function shuffle(array) {
+
+            for (let i = array.length - 1; i > 0; i--) {
+
+                const j = Math.floor(Math.random() * (i + 1));
+
+                [array[i], array[j]] = [array[j], array[i]];
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
