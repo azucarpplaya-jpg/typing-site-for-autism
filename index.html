@@ -1,35 +1,75 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport"
+
+<meta
+name="viewport"
 content="width=device-width,initial-scale=1">
 
-<title>Learning System</title>
+<title>
+Learning System
+</title>
 
 <style>
 
-body{
-margin:0;
-padding:20px;
-font-family:Arial;
-background:#eaf6f3;
+*{
+box-sizing:border-box;
 }
 
-.section{
+body{
 
-background:white;
+margin:0;
+
+font-family:
+Arial,
+sans-serif;
+
+background:#eef5ff;
+
+}
+
+.screen{
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
 
 padding:30px;
 
-border-radius:25px;
+min-height:100vh;
 
-max-width:900px;
+}
 
-margin:auto;
+.card{
 
-box-shadow:0 4px 12px #bbb;
+background:white;
+
+width:100%;
+
+max-width:850px;
+
+border-radius:28px;
+
+padding:35px;
+
+box-shadow:
+0 10px 30px
+rgba(0,0,0,.08);
+
+}
+
+h1{
+
+text-align:center;
+
+font-size:44px;
+
+color:#244;
 
 }
 
@@ -41,22 +81,21 @@ grid-template-columns:
 repeat(
 auto-fit,
 minmax(
-150px,
+180px,
 1fr
-)
-);
+));
 
-gap:20px;
+gap:18px;
+
+margin-top:30px;
 
 }
 
-.lesson{
+.box{
 
-height:140px;
+height:150px;
 
-background:#8fc8b7;
-
-border-radius:22px;
+border-radius:24px;
 
 display:flex;
 
@@ -64,39 +103,52 @@ align-items:center;
 
 justify-content:center;
 
-font-size:42px;
+font-size:34px;
 
 font-weight:bold;
 
+background:
+linear-gradient(
+135deg,
+#75d3ff,
+#5e8dff
+);
+
+color:white;
+
 cursor:pointer;
+
+transition:.15s;
+
+}
+
+.box:hover{
+
+transform:
+translateY(-3px);
+
+}
+
+.lessonBox{
+
+background:
+linear-gradient(
+135deg,
+#7ee7c4,
+#57b7ff
+);
 
 }
 
 .sentence{
 
-font-size:34px;
+font-size:38px;
 
-font-weight:bold;
+text-align:center;
 
-margin:20px 0;
+margin:40px 0;
 
-}
-
-button{
-
-width:100%;
-
-padding:22px;
-
-font-size:28px;
-
-border:none;
-
-border-radius:18px;
-
-margin-top:15px;
-
-background:#8fc8b7;
+line-height:1.5;
 
 }
 
@@ -104,21 +156,106 @@ input{
 
 width:100%;
 
-padding:20px;
+font-size:34px;
 
-font-size:28px;
+padding:24px;
 
-border-radius:18px;
+border-radius:24px;
 
-box-sizing:border-box;
+border:
+3px solid
+#d8e5ff;
+
+outline:none;
 
 }
 
-.success{
+input:focus{
+
+border-color:
+#69a8ff;
+
+}
+
+button{
+
+width:100%;
+
+padding:24px;
+
+margin-top:20px;
+
+font-size:28px;
+
+border:none;
+
+border-radius:22px;
+
+background:#69a8ff;
+
+color:white;
+
+cursor:pointer;
+
+}
+
+.words{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:14px;
+
+padding:20px;
+
+background:#edf7ff;
+
+border-radius:22px;
+
+min-height:120px;
+
+}
+
+.target{
+
+margin-top:20px;
+
+background:#fff7dd;
+
+}
+
+.word{
+
+padding:16px;
+
+font-size:28px;
+
+background:white;
+
+border-radius:18px;
+
+cursor:pointer;
+
+}
+
+.good{
 
 text-align:center;
 
-font-size:45px;
+font-size:54px;
+
+margin:50px;
+
+}
+
+.small{
+
+text-align:center;
+
+font-size:28px;
+
+color:#666;
 
 }
 
@@ -128,9 +265,56 @@ font-size:45px;
 
 <body>
 
+<!-- MODE -->
+
 <div
-class="section"
-id="lessonSelect">
+class="screen"
+id="modeScreen">
+
+<div class="card">
+
+<h1>
+
+Choose Activity
+
+</h1>
+
+<div class="grid">
+
+<div
+class="box"
+
+onclick="chooseMode('typing')">
+
+✏️ Typing
+
+</div>
+
+<div
+class="box"
+
+onclick="chooseMode('puzzle')">
+
+🧩 Puzzle
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- LESSONS -->
+
+<div
+class="screen"
+
+id="lessonScreen"
+
+style="display:none">
+
+<div class="card">
 
 <h1>
 
@@ -140,20 +324,29 @@ Choose Lesson
 
 <div
 class="grid"
-id="grid">
+id="lessonGrid">
 
 </div>
 
 </div>
+
+</div>
+
+<!-- ACTIVITY -->
 
 <div
-class="section"
+class="screen"
 
-id="lessonScreen"
+id="activity"
 
-style="display:none;">
+style="display:none">
 
-<h2 id="counter"></h2>
+<div class="card">
+
+<h2
+id="count">
+
+</h2>
 
 <div
 class="sentence"
@@ -168,22 +361,66 @@ onclick="readSentence()">
 
 </button>
 
+<div
+id="typingArea">
+
 <input
-id="typing">
+id="typingInput"
+
+placeholder="Type here">
 
 </div>
 
 <div
-class="section"
+id="puzzleArea"
+
+style="display:none">
+
+<div
+class="words"
+id="bank">
+
+</div>
+
+<div
+class="words target"
+id="target">
+
+</div>
+
+<button
+onclick="checkPuzzle()">
+
+Check
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- GOOD -->
+
+<div
+class="screen"
 
 id="good"
 
-style="display:none;">
+style="display:none">
 
-<div
-class="success">
+<div class="card">
+
+<div class="good">
 
 🎉 Good Job!
+
+</div>
+
+<div class="small">
+
+Ready for the next one?
 
 </div>
 
@@ -193,6 +430,8 @@ onclick="nextLesson()">
 Keep Going ➡️
 
 </button>
+
+</div>
 
 </div>
 
@@ -212,83 +451,44 @@ const lessons=[
 
 ];
 
+let mode="typing";
+
 let current=0;
 
 let lastWord="";
 
-/* SPEECH */
+/* SPEAK */
 
 function speak(text){
 
 speechSynthesis.cancel();
 
 speechSynthesis.speak(
-
 new SpeechSynthesisUtterance(
 text
-)
+));
 
+}
+
+function readSentence(){
+
+speak(
+lessons[
+current
+]
 );
 
 }
 
-/* CREATE BOXES */
+/* MODE */
 
-const grid=
-document
-.getElementById(
-"grid"
-);
+function chooseMode(m){
 
-lessons.forEach(
-(
-lesson,
-i
-)=>{
-
-let box=
-document
-.createElement(
-"div"
-);
-
-box.className=
-"lesson";
-
-box.textContent=
-i+1;
-
-box.onclick=
-()=>{
-
-current=i;
-
-openLesson();
-
-};
-
-grid.appendChild(
-box
-);
-
-}
-
-);
-
-/* OPEN */
-
-function openLesson(){
+mode=m;
 
 document
 .getElementById(
-"lessonSelect"
-)
-.style.display=
-"none";
-
-document
-.getElementById(
-"good"
+"modeScreen"
 )
 .style.display=
 "none";
@@ -298,15 +498,88 @@ document
 "lessonScreen"
 )
 .style.display=
-"block";
+"flex";
+
+makeLessons();
+
+}
+
+/* LESSONS */
+
+function makeLessons(){
+
+let grid=
+document
+.getElementById(
+"lessonGrid"
+);
+
+grid.innerHTML="";
+
+lessons.forEach(
+(
+x,
+i
+)=>{
+
+let div=
+document
+.createElement(
+"div"
+);
+
+div.className=
+"box lessonBox";
+
+div.textContent=
+i+1;
+
+div.onclick=
+()=>{
+
+current=i;
+
+openLesson();
+
+};
+
+grid.appendChild(
+div
+);
+
+});
+
+}
+
+function openLesson(){
 
 document
 .getElementById(
-"counter"
+"lessonScreen"
+)
+.style.display=
+"none";
+
+document
+.getElementById(
+"activity"
+)
+.style.display=
+"flex";
+
+document
+.getElementById(
+"count"
 )
 .textContent=
 
-`Lesson ${
+`${mode==="typing"
+?
+"Lesson"
+:
+"Puzzle"}
+
+ ${
 current+1
 }`;
 
@@ -319,43 +592,51 @@ lessons[
 current
 ];
 
-document
-.getElementById(
-"typing"
-)
-.value="";
+if(
+mode==="typing"
+){
+
+typingMode();
+
+}
+
+else{
+
+puzzleMode();
+
+}
+
+}
+
+/* TYPING */
+
+function typingMode(){
+
+typingArea.style.display=
+"block";
+
+puzzleArea.style.display=
+"none";
+
+typingInput.value="";
+
+typingInput.focus();
 
 lastWord="";
 
 }
 
-/* READ */
-
-function readSentence(){
-
-speak(
-lessons[
-current
-]
-);
-
-}
-
-document
-.getElementById(
-"typing"
-)
-
+typingInput
 .addEventListener(
 "input",
 
 function(){
 
-let text=
+let t=
 this.value;
 
 let words=
-text
+t
 .trim()
 .split(/\s+/);
 
@@ -366,7 +647,7 @@ words.length-1
 
 if(
 
-text.endsWith(" ")
+t.endsWith(" ")
 
 &&
 
@@ -389,8 +670,7 @@ newest
 
 if(
 
-text
-.trim()
+t.trim()
 .toLowerCase()
 
 ===
@@ -402,19 +682,7 @@ current
 
 ){
 
-document
-.getElementById(
-"lessonScreen"
-)
-.style.display=
-"none";
-
-document
-.getElementById(
-"good"
-)
-.style.display=
-"block";
+finish();
 
 }
 
@@ -422,7 +690,126 @@ document
 
 );
 
-/* NEXT */
+/* PUZZLE */
+
+function puzzleMode(){
+
+typingArea.style.display=
+"none";
+
+puzzleArea.style.display=
+"block";
+
+bank.innerHTML="";
+target.innerHTML="";
+
+let words=
+[
+...
+lessons[
+current
+]
+.split(" ")
+];
+
+words.sort(
+()=>Math.random()-.5
+);
+
+words.forEach(
+word=>{
+
+let d=
+document
+.createElement(
+"div"
+);
+
+d.className=
+"word";
+
+d.textContent=
+word;
+
+d.onclick=
+()=>{
+
+if(
+d.parentNode===
+bank
+){
+
+target.appendChild(
+d
+);
+
+}
+
+else{
+
+bank.appendChild(
+d
+);
+
+}
+
+};
+
+bank.appendChild(
+d
+);
+
+});
+
+}
+
+function checkPuzzle(){
+
+let made=
+
+[
+...
+target.children
+]
+
+.map(
+x=>
+x.textContent
+)
+
+.join(" ");
+
+if(
+
+made
+.toLowerCase()
+
+===
+
+lessons[
+current
+]
+.toLowerCase()
+
+){
+
+finish();
+
+}
+
+}
+
+/* FINISH */
+
+function finish(){
+
+activity.style.display=
+"none";
+
+good.style.display=
+"flex";
+
+}
 
 function nextLesson(){
 
@@ -433,24 +820,24 @@ current<
 lessons.length
 ){
 
+good.style.display=
+"none";
+
 openLesson();
 
 }
 
 else{
 
-document
-.getElementById(
-"good"
-)
-.innerHTML=
+document.body.innerHTML=
 
 `
-<div
-class="success">
-
-🏆 Finished All Lessons
-
+<div class="screen">
+<div class="card">
+<div class="good">
+🏆 Finished
+</div>
+</div>
 </div>
 `;
 
