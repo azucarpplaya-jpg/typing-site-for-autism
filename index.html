@@ -8,9 +8,7 @@
 <meta name="viewport"
 content="width=device-width,initial-scale=1">
 
-<title>
-Sentence Learning System
-</title>
+<title>Sentence Learning System</title>
 
 <style>
 
@@ -27,17 +25,22 @@ margin:auto;
 }
 
 .section{
+
 background:white;
+
 padding:30px;
+
 border-radius:24px;
-box-shadow:0 4px 10px #bbb;
+
+box-shadow:0 4px 12px #bbb;
+
 }
 
 button{
 
 width:100%;
 
-padding:20px;
+padding:22px;
 
 font-size:28px;
 
@@ -74,9 +77,9 @@ gap:12px;
 
 padding:15px;
 
-min-height:100px;
-
 border-radius:18px;
+
+min-height:100px;
 
 }
 
@@ -94,9 +97,9 @@ background:#b7d9ff;
 
 padding:14px;
 
-font-size:28px;
-
 border-radius:14px;
+
+font-size:28px;
 
 cursor:pointer;
 
@@ -106,13 +109,13 @@ input{
 
 width:100%;
 
-font-size:28px;
-
 padding:18px;
 
-box-sizing:border-box;
+font-size:28px;
 
 border-radius:18px;
+
+box-sizing:border-box;
 
 }
 
@@ -136,25 +139,73 @@ margin-top:15px;
 
 <div
 class="section"
-id="start">
+id="menu">
 
 <h1>
 Sentence Learning System 🔊
 </h1>
 
-<button id="openPuzzle">
+<button id="lessonBtn">
+
+✏️ Lessons
+
+</button>
+
+<button id="puzzleBtn">
 
 🧩 Puzzles
 
 </button>
 
-<button id="openTyping">
+</div>
 
-✏️ Typing
+<!-- LESSON -->
+
+<div
+class="section"
+id="lesson"
+
+style="display:none;">
+
+<h2 id="lessonCount"></h2>
+
+<div
+id="lessonSentence"
+
+class="sentence">
+
+</div>
+
+<button id="lessonRead">
+
+🔊 Read
+
+</button>
+
+<input
+id="lessonInput"
+
+placeholder="Type sentence">
+
+<div
+id="lessonMsg"
+
+class="message">
+
+</div>
+
+<button
+id="lessonNext"
+
+style="display:none;">
+
+Keep Going ➡️
 
 </button>
 
 </div>
+
+<!-- PUZZLE -->
 
 <div
 class="section"
@@ -162,7 +213,7 @@ id="puzzle"
 
 style="display:none;">
 
-<h2 id="puzzleCounter"></h2>
+<h2 id="puzzleCount"></h2>
 
 <div
 id="puzzleSentence"
@@ -171,7 +222,7 @@ class="sentence">
 
 </div>
 
-<button id="readPuzzle">
+<button id="puzzleRead">
 
 🔊 Read
 
@@ -191,18 +242,9 @@ class="target">
 
 </div>
 
-<button id="check">
+<button id="checkPuzzle">
 
 Check ✅
-
-</button>
-
-<button
-id="nextPuzzle"
-
-style="display:none;">
-
-Keep Going ➡️
 
 </button>
 
@@ -213,41 +255,8 @@ class="message">
 
 </div>
 
-</div>
-
-<div
-class="section"
-id="typing"
-
-style="display:none;">
-
-<h2 id="typingCounter"></h2>
-
-<div
-id="typingSentence"
-
-class="sentence">
-
-</div>
-
-<button id="readTyping">
-
-🔊 Read
-
-</button>
-
-<input
-id="typingInput">
-
-<div
-id="typingMsg"
-
-class="message">
-
-</div>
-
 <button
-id="nextTyping"
+id="puzzleNext"
 
 style="display:none;">
 
@@ -261,7 +270,7 @@ Keep Going ➡️
 
 <script>
 
-const sentences=[
+const lessons=[
 
 "I like to eat watermelon every day",
 
@@ -275,9 +284,9 @@ const sentences=[
 
 ];
 
-let puzzleIndex=0;
+let lesson=0;
 
-let typingIndex=0;
+let puzzle=0;
 
 let lastWord="";
 
@@ -285,45 +294,42 @@ function speak(text){
 
 speechSynthesis.cancel();
 
-let u=
+speechSynthesis.speak(
 new SpeechSynthesisUtterance(
 text
-);
-
-u.rate=.8;
-
-speechSynthesis.speak(
-u
-);
+));
 
 }
 
-const start=
-document.getElementById(
-"start"
-);
-
-const puzzle=
-document.getElementById(
-"puzzle"
-);
-
-const typing=
-document.getElementById(
-"typing"
-);
+/* OPEN */
 
 document
 .getElementById(
-"openPuzzle"
+"lessonBtn"
 )
 
-.addEventListener(
-"click",
-
+.onclick=
 ()=>{
 
-start.style.display=
+menu.style.display=
+"none";
+
+lesson.style.display=
+"block";
+
+loadLesson();
+
+};
+
+document
+.getElementById(
+"puzzleBtn"
+)
+
+.onclick=
+()=>{
+
+menu.style.display=
 "none";
 
 puzzle.style.display=
@@ -331,81 +337,187 @@ puzzle.style.display=
 
 loadPuzzle();
 
-}
+};
 
-);
+/* LESSON */
 
-document
-.getElementById(
-"openTyping"
-)
-
-.addEventListener(
-"click",
-
-()=>{
-
-start.style.display=
-"none";
-
-typing.style.display=
-"block";
-
-loadTyping();
-
-}
-
-);
-
-/* PUZZLES */
-
-function loadPuzzle(){
+function loadLesson(){
 
 document
 .getElementById(
-"puzzleCounter"
+"lessonCount"
 )
 .textContent=
 
-`Puzzle ${
-puzzleIndex+1
+`Lesson ${
+lesson+1
 } of ${
-sentences.length
+lessons.length
 }`;
 
 document
 .getElementById(
-"puzzleSentence"
+"lessonSentence"
 )
 .textContent=
-sentences[
-puzzleIndex
+lessons[
+lesson
 ];
 
 document
 .getElementById(
-"bank"
+"lessonInput"
 )
-.innerHTML="";
+.value="";
 
 document
 .getElementById(
-"target"
+"lessonMsg"
 )
-.innerHTML="";
+.textContent="";
 
 document
 .getElementById(
-"nextPuzzle"
+"lessonNext"
 )
 .style.display=
 "none";
 
-let words=
-[
-...sentences[
-puzzleIndex
+lastWord="";
+
+}
+
+lessonRead.onclick=
+()=>{
+
+speak(
+lessons[
+lesson
 ]
+);
+
+};
+
+lessonInput
+.addEventListener(
+"input",
+
+function(){
+
+let text=
+this.value;
+
+let words=
+text
+.trim()
+.split(/\s+/);
+
+let newest=
+words[
+words.length-1
+];
+
+if(
+
+text.endsWith(" ")
+
+&&
+
+newest
+
+&&
+
+newest!==lastWord
+
+){
+
+lastWord=
+newest;
+
+speak(
+newest
+);
+
+}
+
+if(
+
+text
+.trim()
+.toLowerCase()
+
+===
+
+lessons[
+lesson
+]
+.toLowerCase()
+
+){
+
+lessonMsg.textContent=
+"🎉 Great lesson!";
+
+lessonNext.style.display=
+"block";
+
+}
+
+}
+
+);
+
+lessonNext.onclick=
+()=>{
+
+lesson++;
+
+if(
+lesson<
+lessons.length
+){
+
+loadLesson();
+
+}
+
+};
+
+/* PUZZLE */
+
+function loadPuzzle(){
+
+puzzleCount.textContent=
+
+`Puzzle ${
+puzzle+1
+} of ${
+lessons.length
+}`;
+
+puzzleSentence.textContent=
+
+lessons[
+puzzle
+];
+
+bank.innerHTML="";
+
+target.innerHTML="";
+
+puzzleMsg.textContent="";
+
+puzzleNext.style.display=
+"none";
+
+let words=
+
+[
+...
+lessons[
+puzzle
+]
+
 .split(" ")
 ];
 
@@ -431,14 +543,11 @@ div.onclick=
 ()=>{
 
 if(
-div.parentNode.id===
-"bank"
+div.parentNode===
+bank
 ){
 
-document
-.getElementById(
-"target"
-)
+target
 .appendChild(
 div
 );
@@ -447,10 +556,7 @@ div
 
 else{
 
-document
-.getElementById(
-"bank"
-)
+bank
 .appendChild(
 div
 );
@@ -463,10 +569,7 @@ word
 
 };
 
-document
-.getElementById(
-"bank"
-)
+bank
 .appendChild(
 div
 );
@@ -475,38 +578,25 @@ div
 
 }
 
-document
-.getElementById(
-"readPuzzle"
-)
-
-.onclick=
+puzzleRead.onclick=
 ()=>{
 
 speak(
-sentences[
-puzzleIndex
+lessons[
+puzzle
 ]
 );
 
 };
 
-document
-.getElementById(
-"check"
-)
-
-.onclick=
+checkPuzzle.onclick=
 ()=>{
 
 let answer=
+
 [
 ...
-document
-.getElementById(
-"target"
-)
-.children
+target.children
 ]
 
 .map(
@@ -514,9 +604,7 @@ x=>
 x.textContent
 )
 
-.join(
-" "
-);
+.join(" ");
 
 if(
 
@@ -525,207 +613,34 @@ answer
 
 ===
 
-sentences[
-puzzleIndex
+lessons[
+puzzle
 ]
 .toLowerCase()
 
 ){
 
-document
-.getElementById(
-"nextPuzzle"
-)
-.style.display=
-"block";
+puzzleMsg.textContent=
+"🎉 Great puzzle!";
 
-document
-.getElementById(
-"puzzleMsg"
-)
-.textContent=
-"🎉 Correct";
+puzzleNext.style.display=
+"block";
 
 }
 
 };
 
-document
-.getElementById(
-"nextPuzzle"
-)
-
-.onclick=
+puzzleNext.onclick=
 ()=>{
 
-puzzleIndex++;
+puzzle++;
 
 if(
-puzzleIndex<
-sentences.length
+puzzle<
+lessons.length
 ){
 
 loadPuzzle();
-
-}
-
-};
-
-/* TYPING */
-
-function loadTyping(){
-
-document
-.getElementById(
-"typingCounter"
-)
-.textContent=
-
-`Typing ${
-typingIndex+1
-} of ${
-sentences.length
-}`;
-
-document
-.getElementById(
-"typingSentence"
-)
-.textContent=
-sentences[
-typingIndex
-];
-
-document
-.getElementById(
-"typingInput"
-)
-.value="";
-
-document
-.getElementById(
-"typingMsg"
-)
-.textContent="";
-
-document
-.getElementById(
-"nextTyping"
-)
-.style.display=
-"none";
-
-lastWord="";
-
-}
-
-document
-.getElementById(
-"readTyping"
-)
-
-.onclick=
-()=>{
-
-speak(
-sentences[
-typingIndex
-]
-);
-
-};
-
-document
-.getElementById(
-"typingInput"
-)
-
-.addEventListener(
-"input",
-
-function(){
-
-let text=
-this.value;
-
-let words=
-text
-.trim()
-.split(/\s+/);
-
-let newest=
-words[
-words.length-1
-];
-
-if(
-text.endsWith(" ")
-&&
-newest
-&&
-newest!==lastWord
-){
-
-lastWord=
-newest;
-
-speak(
-newest
-);
-
-}
-
-if(
-
-text
-.trim()
-.toLowerCase()
-
-===
-
-sentences[
-typingIndex
-]
-.toLowerCase()
-
-){
-
-document
-.getElementById(
-"typingMsg"
-)
-.textContent=
-"🎉 Great typing!";
-
-document
-.getElementById(
-"nextTyping"
-)
-.style.display=
-"block";
-
-}
-
-}
-
-);
-
-document
-.getElementById(
-"nextTyping"
-)
-
-.onclick=
-()=>{
-
-typingIndex++;
-
-if(
-typingIndex<
-sentences.length
-){
-
-loadTyping();
 
 }
 
