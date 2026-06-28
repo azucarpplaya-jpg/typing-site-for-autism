@@ -3,14 +3,10 @@
 <head>
 
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
+<meta name="viewport"
 content="width=device-width,initial-scale=1">
 
-<title>
-Sentence Learning System
-</title>
+<title>Learning System</title>
 
 <style>
 
@@ -21,33 +17,56 @@ font-family:Arial;
 background:#eaf6f3;
 }
 
-.container{
-max-width:900px;
-margin:auto;
-}
-
 .section{
+
 background:white;
+
 padding:30px;
-border-radius:24px;
-box-shadow:0 4px 10px #bbb;
+
+border-radius:25px;
+
+max-width:900px;
+
+margin:auto;
+
+box-shadow:0 4px 12px #bbb;
+
 }
 
-button{
+.grid{
 
-width:100%;
+display:grid;
 
-padding:22px;
+grid-template-columns:
+repeat(
+auto-fit,
+minmax(
+150px,
+1fr
+)
+);
 
-font-size:28px;
+gap:20px;
 
-margin-top:15px;
+}
 
-border:none;
+.lesson{
 
-border-radius:18px;
+height:140px;
 
 background:#8fc8b7;
+
+border-radius:22px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:42px;
+
+font-weight:bold;
 
 cursor:pointer;
 
@@ -63,42 +82,21 @@ margin:20px 0;
 
 }
 
-.word-bank,
-.target{
+button{
 
-display:flex;
+width:100%;
 
-flex-wrap:wrap;
-
-gap:12px;
-
-padding:15px;
-
-border-radius:18px;
-
-min-height:100px;
-
-}
-
-.word-bank{
-background:#dff2eb;
-}
-
-.target{
-background:#fff6cf;
-}
-
-.word{
-
-background:#b7d9ff;
-
-padding:14px;
-
-border-radius:14px;
+padding:22px;
 
 font-size:28px;
 
-cursor:pointer;
+border:none;
+
+border-radius:18px;
+
+margin-top:15px;
+
+background:#8fc8b7;
 
 }
 
@@ -106,7 +104,7 @@ input{
 
 width:100%;
 
-padding:18px;
+padding:20px;
 
 font-size:28px;
 
@@ -116,13 +114,11 @@ box-sizing:border-box;
 
 }
 
-.message{
+.success{
 
-font-size:28px;
+text-align:center;
 
-font-weight:bold;
-
-margin-top:15px;
+font-size:45px;
 
 }
 
@@ -132,69 +128,66 @@ margin-top:15px;
 
 <body>
 
-<div class="container">
-
 <div
 class="section"
-id="home">
+id="lessonSelect">
 
 <h1>
-Sentence Learning System 🔊
+
+Choose Lesson
+
 </h1>
 
-<button
-onclick="openLessons()">
+<div
+class="grid"
+id="grid">
 
-✏️ Lessons
-
-</button>
-
-<button
-onclick="openPuzzles()">
-
-🧩 Puzzles
-
-</button>
+</div>
 
 </div>
 
 <div
 class="section"
+
 id="lessonScreen"
 
 style="display:none;">
 
-<h2 id="lessonCounter"></h2>
+<h2 id="counter"></h2>
 
 <div
 class="sentence"
-id="lessonText">
+id="sentence">
 
 </div>
 
 <button
-onclick="readLesson()">
+onclick="readSentence()">
 
 🔊 Read
 
 </button>
 
 <input
-id="lessonInput"
+id="typing">
 
-placeholder="Type sentence">
+</div>
 
 <div
-class="message"
-id="lessonMessage">
+class="section"
+
+id="good"
+
+style="display:none;">
+
+<div
+class="success">
+
+🎉 Good Job!
 
 </div>
 
 <button
-id="lessonNext"
-
-style="display:none"
-
 onclick="nextLesson()">
 
 Keep Going ➡️
@@ -203,72 +196,9 @@ Keep Going ➡️
 
 </div>
 
-<div
-class="section"
-id="puzzleScreen"
-
-style="display:none;">
-
-<h2 id="puzzleCounter"></h2>
-
-<div
-class="sentence"
-id="puzzleText">
-
-</div>
-
-<button
-onclick="readPuzzle()">
-
-🔊 Read
-
-</button>
-
-<div
-id="wordBank"
-
-class="word-bank">
-
-</div>
-
-<div
-id="target"
-
-class="target">
-
-</div>
-
-<button
-onclick="checkPuzzle()">
-
-Check ✅
-
-</button>
-
-<div
-class="message"
-id="puzzleMessage">
-
-</div>
-
-<button
-id="puzzleNext"
-
-style="display:none"
-
-onclick="nextPuzzle()">
-
-Keep Going ➡️
-
-</button>
-
-</div>
-
-</div>
-
 <script>
 
-const data=[
+const lessons=[
 
 "I like to eat watermelon every day",
 
@@ -282,11 +212,11 @@ const data=[
 
 ];
 
-let lessonIndex=0;
-
-let puzzleIndex=0;
+let current=0;
 
 let lastWord="";
+
+/* SPEECH */
 
 function speak(text){
 
@@ -302,13 +232,63 @@ text
 
 }
 
+/* CREATE BOXES */
+
+const grid=
+document
+.getElementById(
+"grid"
+);
+
+lessons.forEach(
+(
+lesson,
+i
+)=>{
+
+let box=
+document
+.createElement(
+"div"
+);
+
+box.className=
+"lesson";
+
+box.textContent=
+i+1;
+
+box.onclick=
+()=>{
+
+current=i;
+
+openLesson();
+
+};
+
+grid.appendChild(
+box
+);
+
+}
+
+);
+
 /* OPEN */
 
-function openLessons(){
+function openLesson(){
 
 document
 .getElementById(
-"home"
+"lessonSelect"
+)
+.style.display=
+"none";
+
+document
+.getElementById(
+"good"
 )
 .style.display=
 "none";
@@ -320,83 +300,42 @@ document
 .style.display=
 "block";
 
-loadLesson();
-
-}
-
-function openPuzzles(){
-
 document
 .getElementById(
-"home"
-)
-.style.display=
-"none";
-
-document
-.getElementById(
-"puzzleScreen"
-)
-.style.display=
-"block";
-
-loadPuzzle();
-
-}
-
-/* LESSON */
-
-function loadLesson(){
-
-document
-.getElementById(
-"lessonCounter"
+"counter"
 )
 .textContent=
 
 `Lesson ${
-lessonIndex+1
-} of ${
-data.length
+current+1
 }`;
 
 document
 .getElementById(
-"lessonText"
+"sentence"
 )
 .textContent=
-data[
-lessonIndex
+lessons[
+current
 ];
 
 document
 .getElementById(
-"lessonInput"
+"typing"
 )
 .value="";
-
-document
-.getElementById(
-"lessonMessage"
-)
-.textContent="";
-
-document
-.getElementById(
-"lessonNext"
-)
-.style.display=
-"none";
 
 lastWord="";
 
 }
 
-function readLesson(){
+/* READ */
+
+function readSentence(){
 
 speak(
-data[
-lessonIndex
+lessons[
+current
 ]
 );
 
@@ -404,7 +343,7 @@ lessonIndex
 
 document
 .getElementById(
-"lessonInput"
+"typing"
 )
 
 .addEventListener(
@@ -456,8 +395,8 @@ text
 
 ===
 
-data[
-lessonIndex
+lessons[
+current
 ]
 .toLowerCase()
 
@@ -465,14 +404,14 @@ lessonIndex
 
 document
 .getElementById(
-"lessonMessage"
+"lessonScreen"
 )
-.textContent=
-"🎉 Great lesson!";
+.style.display=
+"none";
 
 document
 .getElementById(
-"lessonNext"
+"good"
 )
 .style.display=
 "block";
@@ -483,114 +422,18 @@ document
 
 );
 
+/* NEXT */
+
 function nextLesson(){
 
-lessonIndex++;
+current++;
 
 if(
-lessonIndex<
-data.length
+current<
+lessons.length
 ){
 
-loadLesson();
-
-}
-
-}
-
-/* PUZZLE */
-
-function loadPuzzle(){
-
-document
-.getElementById(
-"puzzleCounter"
-)
-.textContent=
-
-`Puzzle ${
-puzzleIndex+1
-} of ${
-data.length
-}`;
-
-document
-.getElementById(
-"puzzleText"
-)
-.textContent=
-data[
-puzzleIndex
-];
-
-document
-.getElementById(
-"wordBank"
-)
-.innerHTML="";
-
-document
-.getElementById(
-"target"
-)
-.innerHTML="";
-
-document
-.getElementById(
-"puzzleMessage"
-)
-.textContent="";
-
-document
-.getElementById(
-"puzzleNext"
-)
-.style.display=
-"none";
-
-let words=
-
-[
-...
-data[
-puzzleIndex
-]
-.split(" ")
-];
-
-words.sort(
-()=>Math.random()-.5
-);
-
-words.forEach(word=>{
-
-let tile=
-document
-.createElement(
-"div"
-);
-
-tile.className=
-"word";
-
-tile.textContent=
-word;
-
-tile.onclick=
-()=>{
-
-if(
-tile.parentNode.id===
-"wordBank"
-){
-
-document
-.getElementById(
-"target"
-)
-.appendChild(
-tile
-);
+openLesson();
 
 }
 
@@ -598,106 +441,18 @@ else{
 
 document
 .getElementById(
-"wordBank"
+"good"
 )
-.appendChild(
-tile
-);
+.innerHTML=
 
-}
+`
+<div
+class="success">
 
-speak(
-word
-);
+🏆 Finished All Lessons
 
-};
-
-document
-.getElementById(
-"wordBank"
-)
-.appendChild(
-tile
-);
-
-});
-
-}
-
-function readPuzzle(){
-
-speak(
-data[
-puzzleIndex
-]
-);
-
-}
-
-function checkPuzzle(){
-
-let answer=
-
-[
-...
-document
-.getElementById(
-"target"
-)
-.children
-]
-
-.map(
-x=>
-x.textContent
-)
-
-.join(
-" "
-);
-
-if(
-
-answer
-.toLowerCase()
-
-===
-
-data[
-puzzleIndex
-]
-.toLowerCase()
-
-){
-
-document
-.getElementById(
-"puzzleMessage"
-)
-.textContent=
-"🎉 Great puzzle!";
-
-document
-.getElementById(
-"puzzleNext"
-)
-.style.display=
-"block";
-
-}
-
-}
-
-function nextPuzzle(){
-
-puzzleIndex++;
-
-if(
-puzzleIndex<
-data.length
-){
-
-loadPuzzle();
+</div>
+`;
 
 }
 
@@ -706,4 +461,5 @@ loadPuzzle();
 </script>
 
 </body>
+
 </html>
