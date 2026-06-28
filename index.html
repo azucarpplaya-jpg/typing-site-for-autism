@@ -1,21 +1,13 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width,initial-scale=1">
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Learning System</title>
 
 <style>
 
-*{
-box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
 margin:0;
@@ -24,150 +16,71 @@ background:#eef5ff;
 }
 
 .screen{
-
 display:flex;
-
 justify-content:center;
-
 padding:25px;
-
 min-height:100vh;
-
 }
 
 .card{
-
 width:100%;
-
 max-width:900px;
-
 background:white;
-
-border-radius:30px;
-
 padding:30px;
-
-box-shadow:
-0 12px 30px
-rgba(0,0,0,.08);
-
-}
-
-h1,h2{
-text-align:center;
+border-radius:30px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
 }
 
 .grid{
-
 display:grid;
-
-grid-template-columns:
-repeat(
-auto-fit,
-minmax(
-160px,
-1fr
-));
-
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
 gap:18px;
-
 }
 
 .box{
-
 height:150px;
-
+border-radius:25px;
 display:flex;
-
-align-items:center;
-
 justify-content:center;
-
-border-radius:28px;
-
-font-size:34px;
-
+align-items:center;
+font-size:36px;
 font-weight:bold;
-
-cursor:pointer;
-
+background:linear-gradient(135deg,#69a8ff,#5fd8bf);
 color:white;
-
-background:
-linear-gradient(
-135deg,
-#69a8ff,
-#5fd8bf
-);
-
-}
-
-.box:active{
-transform:scale(.98);
+cursor:pointer;
 }
 
 .sentence{
-
-font-size:38px;
-
+font-size:36px;
 text-align:center;
-
-margin:30px 0;
-
-line-height:1.4;
-
+margin:25px 0;
 }
 
 button{
-
 width:100%;
-
 padding:22px;
-
 font-size:28px;
-
 border:none;
-
 border-radius:22px;
-
 background:#69a8ff;
-
 color:white;
-
-cursor:pointer;
-
-margin-top:18px;
-
+margin-top:15px;
 }
 
 input{
-
 width:100%;
-
-font-size:34px;
-
-padding:22px;
-
-border-radius:22px;
-
-border:3px solid #d8e5ff;
-
+padding:20px;
+font-size:30px;
+border-radius:20px;
 }
 
 .words{
-
 display:flex;
-
 flex-wrap:wrap;
-
-gap:14px;
-
+gap:12px;
 padding:18px;
-
-border-radius:22px;
-
-min-height:110px;
-
+border-radius:20px;
+min-height:120px;
 }
 
 #bank{
@@ -180,37 +93,16 @@ margin-top:20px;
 }
 
 .word{
-
 background:white;
-
 padding:16px;
-
-font-size:30px;
-
 border-radius:18px;
-
+font-size:30px;
 cursor:pointer;
-
 }
 
 .good{
-
-font-size:56px;
-
+font-size:52px;
 text-align:center;
-
-margin-top:60px;
-
-}
-
-.small{
-
-font-size:26px;
-
-text-align:center;
-
-color:#666;
-
 }
 
 </style>
@@ -219,19 +111,11 @@ color:#666;
 
 <body>
 
-<!-- MODE -->
-
-<div
-class="screen"
-id="modeScreen">
+<div class="screen" id="mode">
 
 <div class="card">
 
-<h1>
-
-Sentence Learning
-
-</h1>
+<h1>Choose Activity</h1>
 
 <div class="grid">
 
@@ -239,7 +123,7 @@ Sentence Learning
 class="box"
 onclick="choose('typing')">
 
-✏️ Typing
+✏️
 
 </div>
 
@@ -247,7 +131,7 @@ onclick="choose('typing')">
 class="box"
 onclick="choose('puzzle')">
 
-🧩 Puzzle
+🧩
 
 </div>
 
@@ -256,22 +140,16 @@ onclick="choose('puzzle')">
 </div>
 
 </div>
-
-<!-- LESSONS -->
 
 <div
 class="screen"
-id="lessonScreen"
+id="lessons"
 
 style="display:none">
 
 <div class="card">
 
-<h1>
-
-Choose Lesson
-
-</h1>
+<h1>Choose Lesson</h1>
 
 <div
 class="grid"
@@ -283,8 +161,6 @@ id="lessonGrid">
 
 </div>
 
-<!-- ACTIVITY -->
-
 <div
 class="screen"
 id="activity"
@@ -293,10 +169,7 @@ style="display:none">
 
 <div class="card">
 
-<h2
-id="counter">
-
-</h2>
+<h2 id="counter"></h2>
 
 <div
 class="sentence"
@@ -304,20 +177,16 @@ id="sentence">
 
 </div>
 
-<button
-onclick="readSentence()">
+<button onclick="readSentence()">
 
 🔊 Read
 
 </button>
 
-<div
-id="typingArea">
+<div id="typingArea">
 
 <input
-id="typingInput"
-
-placeholder="Type here">
+id="typingInput">
 
 </div>
 
@@ -327,21 +196,23 @@ id="puzzleArea"
 style="display:none">
 
 <div
-class="words"
-id="bank">
+id="bank"
+
+class="words">
 
 </div>
 
 <div
-class="words"
-id="target">
+id="target"
+
+class="words">
 
 </div>
 
 <button
 onclick="checkPuzzle()">
 
-Check ✅
+Check
 
 </button>
 
@@ -350,8 +221,6 @@ Check ✅
 </div>
 
 </div>
-
-<!-- GOOD -->
 
 <div
 class="screen"
@@ -364,12 +233,6 @@ style="display:none">
 <div class="good">
 
 🎉 Good Job!
-
-</div>
-
-<div class="small">
-
-Ready for the next one?
 
 </div>
 
@@ -400,17 +263,13 @@ const lessons=[
 
 ];
 
-let mode="typing";
-
 let current=0;
+
+let mode="typing";
 
 let lastWord="";
 
-/* SPEAK */
-
 function speak(text){
-
-speechSynthesis.cancel();
 
 let u=
 new SpeechSynthesisUtterance(
@@ -425,22 +284,21 @@ u
 
 }
 
-/* MODE */
-
 function choose(m){
 
 mode=m;
 
-document
-.getElementById(
-"modeScreen"
-)
-.style.display=
+modeScreen=
+document.getElementById(
+"mode"
+);
+
+modeScreen.style.display=
 "none";
 
 document
 .getElementById(
-"lessonScreen"
+"lessons"
 )
 .style.display=
 "flex";
@@ -448,8 +306,6 @@ document
 drawLessons();
 
 }
-
-/* LESSON BOXES */
 
 function drawLessons(){
 
@@ -467,44 +323,44 @@ x,
 i
 )=>{
 
-let box=
+let d=
 document
 .createElement(
 "div"
 );
 
-box.className=
+d.className=
 "box";
 
-box.textContent=
+d.textContent=
 i+1;
 
-box.onclick=
+d.onclick=
 ()=>{
 
 current=i;
 
-openLesson();
+open();
 
 };
 
 grid.appendChild(
-box
+d
 );
 
 });
 
 }
 
-/* OPEN */
+function open(){
 
-function openLesson(){
-
+lessonsScreen=
 document
 .getElementById(
-"lessonScreen"
-)
-.style.display=
+"lessons"
+);
+
+lessonsScreen.style.display=
 "none";
 
 document
@@ -521,42 +377,23 @@ document
 .style.display=
 "flex";
 
-document
-.getElementById(
-"counter"
-)
-.textContent=
+counter.textContent=
+`${mode} ${current+1}`;
 
-`${mode==="typing"
-?
-"Lesson"
-:
-"Puzzle"}
-
- ${
-current+1
-}`;
-
-document
-.getElementById(
-"sentence"
-)
-.textContent=
-lessons[
-current
-];
+sentence.textContent=
+lessons[current];
 
 if(
 mode==="typing"
 ){
 
-startTyping();
+typing();
 
 }
 
 else{
 
-startPuzzle();
+puzzle();
 
 }
 
@@ -574,52 +411,31 @@ current
 
 /* TYPING */
 
-function startTyping(){
+function typing(){
 
-document
-.getElementById(
-"typingArea"
-)
-.style.display=
+typingArea.style.display=
 "block";
 
-document
-.getElementById(
-"puzzleArea"
-)
-.style.display=
+puzzleArea.style.display=
 "none";
 
-let input=
-document
-.getElementById(
-"typingInput"
-);
+typingInput.value="";
 
-input.value="";
-
-input.focus();
-
-lastWord="";
+typingInput.focus();
 
 }
 
-document
-.getElementById(
-"typingInput"
-)
-
+typingInput
 .addEventListener(
 "input",
 
 function(){
 
-let text=
+let t=
 this.value;
 
 let words=
-text
-.trim()
+t.trim()
 .split(/\s+/);
 
 let newest=
@@ -629,7 +445,7 @@ words.length-1
 
 if(
 
-text.endsWith(" ")
+t.endsWith(" ")
 
 &&
 
@@ -652,8 +468,7 @@ newest
 
 if(
 
-text
-.trim()
+t.trim()
 .toLowerCase()
 
 ===
@@ -671,39 +486,20 @@ finish();
 
 }
 
-);
-
 /* PUZZLE */
 
-function startPuzzle(){
+);
 
-document
-.getElementById(
-"typingArea"
-)
-.style.display=
+function puzzle(){
+
+typingArea.style.display=
 "none";
 
-document
-.getElementById(
-"puzzleArea"
-)
-.style.display=
+puzzleArea.style.display=
 "block";
 
-let bank=
-document
-.getElementById(
-"bank"
-);
-
-let target=
-document
-.getElementById(
-"target"
-);
-
 bank.innerHTML="";
+
 target.innerHTML="";
 
 let words=
@@ -734,7 +530,18 @@ tile.className=
 tile.textContent=
 word;
 
-tile.onclick=
+tile.addEventListener(
+"click",
+
+()=>{
+
+speak(
+word
+);
+
+/* WAIT */
+
+setTimeout(
 ()=>{
 
 if(
@@ -742,26 +549,27 @@ tile.parentNode===
 bank
 ){
 
-target
-.appendChild(
+target.appendChild(
 tile
 );
 
 }
+
 else{
 
-bank
-.appendChild(
+bank.appendChild(
 tile
 );
 
 }
 
-speak(
-word
+},
+120
 );
 
-};
+}
+
+);
 
 bank.appendChild(
 tile
@@ -773,15 +581,11 @@ tile
 
 function checkPuzzle(){
 
-let answer=
+let made=
 
 [
 ...
-document
-.getElementById(
-"target"
-)
-.children
+target.children
 ]
 
 .map(
@@ -789,13 +593,11 @@ x=>
 x.textContent
 )
 
-.join(
-" "
-);
+.join(" ");
 
 if(
 
-answer
+made
 .toLowerCase()
 
 ===
@@ -813,22 +615,12 @@ finish();
 
 }
 
-/* FINISH */
-
 function finish(){
 
-document
-.getElementById(
-"activity"
-)
-.style.display=
+activity.style.display=
 "none";
 
-document
-.getElementById(
-"good"
-)
-.style.display=
+good.style.display=
 "flex";
 
 }
@@ -842,23 +634,7 @@ current<
 lessons.length
 ){
 
-openLesson();
-
-}
-
-else{
-
-document.body.innerHTML=
-
-`
-<div class="screen">
-<div class="card">
-<div class="good">
-🏆 Finished All Lessons
-</div>
-</div>
-</div>
-`;
+open();
 
 }
 
