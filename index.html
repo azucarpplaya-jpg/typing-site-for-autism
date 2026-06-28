@@ -5,8 +5,7 @@
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
+<meta name="viewport"
 content="width=device-width,initial-scale=1">
 
 <title>
@@ -18,7 +17,7 @@ Sentence Learning System
 body{
 margin:0;
 padding:20px;
-font-family:Arial;
+font-family:Arial,sans-serif;
 background:#eaf6f3;
 }
 
@@ -40,20 +39,33 @@ font-size:42px;
 }
 
 button{
+
 width:100%;
+
 padding:22px;
-font-size:32px;
+
+font-size:30px;
+
 margin-top:15px;
+
 border:none;
-border-radius:20px;
+
+border-radius:18px;
+
 background:#8fc8b7;
+
 cursor:pointer;
+
 }
 
 .sentence{
+
 font-size:34px;
+
 font-weight:bold;
+
 margin:20px 0;
+
 }
 
 .word-bank,
@@ -63,11 +75,11 @@ display:flex;
 
 flex-wrap:wrap;
 
-gap:10px;
-
-min-height:90px;
+gap:12px;
 
 padding:15px;
+
+min-height:90px;
 
 border-radius:18px;
 
@@ -78,7 +90,7 @@ background:#dff2eb;
 }
 
 .target{
-background:#fff3cc;
+background:#fff4cc;
 margin-top:15px;
 }
 
@@ -88,9 +100,9 @@ background:#b7d9ff;
 
 padding:14px;
 
-border-radius:14px;
-
 font-size:28px;
+
+border-radius:14px;
 
 cursor:pointer;
 
@@ -100,11 +112,11 @@ input{
 
 width:100%;
 
-font-size:28px;
+font-size:30px;
 
 padding:18px;
 
-border-radius:15px;
+border-radius:18px;
 
 box-sizing:border-box;
 
@@ -132,6 +144,8 @@ margin-top:20px;
 Sentence Learning System 🔊
 </h1>
 
+<!-- START -->
+
 <div
 class="section"
 id="start">
@@ -152,9 +166,11 @@ onclick="startTyping()">
 
 </div>
 
+<!-- PUZZLES -->
+
 <div
 class="section"
-id="puzzleSection"
+id="puzzle"
 
 style="display:none;">
 
@@ -170,7 +186,7 @@ class="sentence">
 <button
 onclick="readPuzzle()">
 
-🔊 Read
+🔊 Read Sentence
 
 </button>
 
@@ -215,10 +231,11 @@ class="message">
 
 </div>
 
+<!-- TYPING -->
+
 <div
 class="section"
-
-id="typingSection"
+id="typing"
 
 style="display:none;">
 
@@ -234,12 +251,14 @@ class="sentence">
 <button
 onclick="readTyping()">
 
-🔊 Read
+🔊 Read Sentence
 
 </button>
 
 <input
-id="typingBox">
+id="typingBox"
+
+placeholder="Type here">
 
 <div
 id="typingMessage"
@@ -279,37 +298,38 @@ const sentences=[
 
 ];
 
-let puzzle=0;
-let typing=0;
+let puzzleIndex=0;
+let typingIndex=0;
+
+let lastWord="";
+
+/* SPEECH */
 
 function speak(text){
 
 speechSynthesis.cancel();
 
-speechSynthesis.speak(
-
+let u=
 new SpeechSynthesisUtterance(
 text
-)
+);
 
+u.rate=.8;
+
+speechSynthesis.speak(
+u
 );
 
 }
 
+/* START */
+
 function startPuzzle(){
 
-document
-.getElementById(
-"start"
-)
-.style.display=
+start.style.display=
 "none";
 
-document
-.getElementById(
-"puzzleSection"
-)
-.style.display=
+puzzle.style.display=
 "block";
 
 loadPuzzle();
@@ -318,136 +338,109 @@ loadPuzzle();
 
 function startTyping(){
 
-document
-.getElementById(
-"start"
-)
-.style.display=
+start.style.display=
 "none";
 
-document
-.getElementById(
-"typingSection"
-)
-.style.display=
+typing.style.display=
 "block";
 
 loadTyping();
 
 }
 
+/* PUZZLES */
+
 function loadPuzzle(){
 
-document
-.getElementById(
-"counter"
-)
-.textContent=
-`Puzzle ${puzzle+1}`;
+counter.textContent=
+`Puzzle ${
+puzzleIndex+1
+} of ${
+sentences.length
+}`;
 
-document
-.getElementById(
-"sentence"
-)
-.textContent=
-sentences[puzzle];
+sentence.textContent=
+sentences[
+puzzleIndex
+];
 
-document
-.getElementById(
-"bank"
-)
-.innerHTML="";
+bank.innerHTML="";
+target.innerHTML="";
 
-document
-.getElementById(
-"target"
-)
-.innerHTML="";
+message.textContent="";
 
-document
-.getElementById(
-"message"
-)
-.textContent="";
-
-document
-.getElementById(
-"nextPuzzle"
-)
-.style.display=
+nextPuzzle.style.display=
 "none";
 
 let words=
-[
-...sentences[puzzle]
-.split(" ")
-];
+sentences[
+puzzleIndex
+]
 
-words.sort(
+.split(" ")
+
+.sort(
 ()=>Math.random()-.5
 );
 
 words.forEach(word=>{
 
-let div=
+let tile=
 document
 .createElement(
 "div"
 );
 
-div.className=
+tile.className=
 "word";
 
-div.textContent=
+tile.textContent=
 word;
 
-div.onclick=
+tile.onclick=
 ()=>{
 
-let bank=
-document
-.getElementById(
-"bank"
-);
-
-let target=
-document
-.getElementById(
-"target"
-);
-
 if(
-div.parentNode===
+tile.parentNode===
 bank
 ){
 
 target
 .appendChild(
-div
+tile
 );
 
 }else{
 
 bank
 .appendChild(
-div
+tile
 );
 
 }
 
-speak(word);
+speak(
+word
+);
 
 };
 
-document
-.getElementById(
-"bank"
-)
+bank
 .appendChild(
-div
+tile
 );
 
 });
+
+}
+
+function readPuzzle(){
+
+speak(
+sentences[
+puzzleIndex
+]
+);
 
 }
 
@@ -457,11 +450,7 @@ let answer=
 
 [
 ...
-document
-.getElementById(
-"target"
-)
-.children
+target.children
 ]
 
 .map(
@@ -479,34 +468,32 @@ answer
 ===
 
 sentences[
-puzzle
+puzzleIndex
 ]
 .toLowerCase()
 
 ){
 
-document
-.getElementById(
-"message"
-)
-.textContent=
-"🎉 Correct!";
+message.textContent=
+"🎉 Great Job!";
 
-document
-.getElementById(
-"nextPuzzle"
-)
-.style.display=
+speak(
+"Great job"
+);
+
+nextPuzzle.style.display=
 "block";
 
-}else{
+}
 
-document
-.getElementById(
-"message"
-)
-.textContent=
+else{
+
+message.textContent=
 "Try again";
+
+speak(
+"Try again"
+);
 
 }
 
@@ -514,61 +501,52 @@ document
 
 function nextPuzzle(){
 
-puzzle++;
+puzzleIndex++;
 
 if(
-puzzle<
+puzzleIndex<
 sentences.length
 ){
 
 loadPuzzle();
 
-}else{
+}
 
-document
-.getElementById(
-"message"
-)
-.textContent=
+else{
+
+message.textContent=
 "🎉 Finished";
 
 }
 
 }
 
-function readPuzzle(){
-
-speak(
-sentences[
-puzzle
-]
-);
-
-}
+/* TYPING */
 
 function loadTyping(){
 
-document
-.getElementById(
-"typingCounter"
-)
-.textContent=
-`Typing ${typing+1}`;
+typingCounter.textContent=
 
-document
-.getElementById(
-"typingSentence"
-)
-.textContent=
+`Typing ${
+typingIndex+1
+} of ${
+sentences.length
+}`;
+
+typingSentence.textContent=
+
 sentences[
-typing
+typingIndex
 ];
 
-document
-.getElementById(
-"typingBox"
-)
-.value="";
+typingBox.value="";
+
+typingMessage.textContent="";
+
+nextTyping.style.display=
+"none";
+
+lastWord="";
 
 }
 
@@ -576,51 +554,82 @@ function readTyping(){
 
 speak(
 sentences[
-typing
+typingIndex
 ]
 );
 
 }
 
-document
-.getElementById(
-"typingBox"
-)
-
+typingBox
 .addEventListener(
 "input",
 
 function(){
 
+let text=
+this.value;
+
+let words=
+text
+.trim()
+.split(/\s+/);
+
+let newest=
+words[
+words.length-1
+];
+
+/* SPEAK EACH WORD */
+
 if(
 
-this
-.value
+text.endsWith(" ")
+
+&&
+
+newest
+
+&&
+
+newest!==lastWord
+
+){
+
+lastWord=
+newest;
+
+speak(
+newest
+);
+
+}
+
+/* COMPLETE */
+
+if(
+
+text
 .trim()
 .toLowerCase()
 
 ===
 
 sentences[
-typing
+typingIndex
 ]
 .toLowerCase()
 
 ){
 
-document
-.getElementById(
-"typingMessage"
-)
-.textContent=
-"🎉 Correct";
+typingMessage.textContent=
+"🎉 Great typing!";
 
-document
-.getElementById(
-"nextTyping"
-)
-.style.display=
+nextTyping.style.display=
 "block";
+
+speak(
+"Great typing"
+);
 
 }
 
@@ -630,23 +639,25 @@ document
 
 function nextTyping(){
 
-typing++;
+typingIndex++;
 
 if(
-typing<
+typingIndex<
 sentences.length
 ){
 
 loadTyping();
 
-}else{
+}
 
-document
-.getElementById(
-"typingMessage"
-)
-.textContent=
+else{
+
+typingMessage.textContent=
 "🎉 Finished";
+
+speak(
+"Finished typing"
+);
 
 }
 
