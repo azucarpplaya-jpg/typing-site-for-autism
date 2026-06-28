@@ -1,104 +1,46 @@
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Learning System</title>
-
-<style>
-body{
-font-family:Arial,"Comic Sans MS",sans-serif;
-background:#eaf6f3;
-padding:25px;
-}
-
-.container{max-width:900px;margin:auto;}
-
-.section{
-background:white;
-padding:25px;
-border-radius:20px;
-margin-bottom:25px;
-box-shadow:0 3px 10px #aaa;
-}
-
-h1{color:#234;}
-
-.sentence{
-font-size:34px;
-font-weight:bold;
-}
-
-button{
-font-size:22px;
-padding:12px 20px;
-border:none;
-border-radius:15px;
-background:#8fc8b7;
-cursor:pointer;
-margin:5px;
-}
-
-.word-bank,.target{
-min-height:90px;
-display:flex;
-flex-wrap:wrap;
-gap:12px;
-padding:15px;
-border-radius:15px;
-}
-
-.word-bank{background:#dff2eb;}
-.target{background:#fff7d6;}
-
-.word{
-background:#b7d9ff;
-padding:15px;
-border-radius:12px;
-font-size:28px;
-font-weight:bold;
-cursor:pointer;
-user-select:none;
-}
-
-input{
-width:100%;
-font-size:28px;
-padding:12px;
-border-radius:12px;
-}
-
-#message,#typingMessage{
-font-size:28px;
-font-weight:bold;
-}
-
-.correct{background:#b8efb8;}
-</style>
-</head>
-
 <body>
 
 <div class="container">
 
 <h1>Sentence Learning System 🔊</h1>
 
+<!-- START SCREEN -->
+<div class="section" id="startSection">
+
+<h2>Choose Activity</h2>
+
+<button onclick="startMode('puzzle')">
+🧩 Puzzles
+</button>
+
+<button onclick="startMode('typing')">
+✏️ Typing
+</button>
+
+</div>
+
 <!-- PUZZLES -->
-<div class="section" id="puzzleSection">
+<div class="section" id="puzzleSection" style="display:none;">
 
 <h2 id="counter"></h2>
 
 <div id="sentence" class="sentence"></div>
 
-<button onclick="speak(sentences[puzzleIndex])">🔊 Read</button>
+<button onclick="speak(sentences[puzzleIndex])">
+🔊 Read
+</button>
 
 <div id="bank" class="word-bank"></div>
+
 <div id="target" class="target"></div>
 
-<button onclick="checkPuzzle()">Check ✅</button>
+<button onclick="checkPuzzle()">
+Check ✅
+</button>
 
-<button id="nextPuzzleBtn" onclick="nextPuzzle()" style="display:none;">
+<button id="nextPuzzleBtn"
+onclick="nextPuzzle()"
+style="display:none;">
 Keep Going ➡️
 </button>
 
@@ -107,21 +49,29 @@ Keep Going ➡️
 </div>
 
 <!-- TYPING -->
-<div class="section" id="typingSection" style="display:none;">
+<div class="section"
+id="typingSection"
+style="display:none;">
 
 <h2>Typing Practice ✏️</h2>
 
 <div id="typingCounter"></div>
 
-<div id="typingSentence" class="sentence"></div>
+<div id="typingSentence"
+class="sentence"></div>
 
-<button onclick="speak(sentences[typingIndex])">🔊 Read</button>
+<button onclick="speak(sentences[typingIndex])">
+🔊 Read
+</button>
 
-<input id="typingBox" placeholder="Type here...">
+<input id="typingBox"
+placeholder="Type here...">
 
 <div id="typingMessage"></div>
 
-<button id="nextTypingBtn" onclick="nextTyping()" style="display:none;">
+<button id="nextTypingBtn"
+onclick="nextTyping()"
+style="display:none;">
 Next Typing ➡️
 </button>
 
@@ -146,52 +96,127 @@ const speech=window.speechSynthesis;
 
 function speak(t){
 speech.cancel();
+
 let u=new SpeechSynthesisUtterance(t);
-u.rate=0.75;
+
+u.rate=.75;
+
 speech.speak(u);
 }
 
-/* ---------------- PUZZLES ---------------- */
+/* START */
+
+function startMode(mode){
+
+document.getElementById(
+"startSection"
+).style.display="none";
+
+if(mode==="puzzle"){
+
+document.getElementById(
+"puzzleSection"
+).style.display="block";
+
+loadPuzzle();
+
+}
+
+if(mode==="typing"){
+
+document.getElementById(
+"typingSection"
+).style.display="block";
+
+loadTyping();
+
+}
+
+}
+
+/* PUZZLES */
 
 function loadPuzzle(){
 
-document.getElementById("counter").textContent=
-"Puzzle "+(puzzleIndex+1)+" of "+sentences.length;
+document.getElementById(
+"counter"
+).textContent=
+"Puzzle "+
+(puzzleIndex+1)+
+" of "+
+sentences.length;
 
-document.getElementById("sentence").textContent=
+document.getElementById(
+"sentence"
+).textContent=
 sentences[puzzleIndex];
 
-document.getElementById("message").textContent="";
-document.getElementById("nextPuzzleBtn").style.display="none";
+document.getElementById(
+"message"
+).textContent="";
 
-let bank=document.getElementById("bank");
-let target=document.getElementById("target");
+document.getElementById(
+"nextPuzzleBtn"
+).style.display="none";
+
+let bank=
+document.getElementById(
+"bank"
+);
+
+let target=
+document.getElementById(
+"target"
+);
 
 bank.innerHTML="";
 target.innerHTML="";
 
-let words=sentences[puzzleIndex].split(" ");
-words.sort(()=>Math.random()-0.5);
+let words=
+sentences[puzzleIndex]
+.split(" ")
+.sort(
+()=>Math.random()-.5
+);
 
 words.forEach(word=>{
 
-let tile=document.createElement("div");
-tile.className="word";
-tile.textContent=word;
+let tile=
+document.createElement(
+"div"
+);
+
+tile.className=
+"word";
+
+tile.textContent=
+word;
 
 tile.onclick=()=>{
 
-if(tile.parentNode===bank){
-target.appendChild(tile);
-speak(word);
+if(
+tile.parentNode===
+bank
+){
+
+target.appendChild(
+tile
+);
+
 }else{
-bank.appendChild(tile);
-speak(word);
+
+bank.appendChild(
+tile
+);
+
 }
+
+speak(word);
 
 };
 
-bank.appendChild(tile);
+bank.appendChild(
+tile);
 
 });
 
@@ -199,19 +224,42 @@ bank.appendChild(tile);
 
 function checkPuzzle(){
 
-let made=[...document.getElementById("target").children]
-.map(x=>x.textContent)
+let made=
+[
+...document
+.getElementById(
+"target"
+)
+.children
+]
+.map(
+x=>x.textContent
+)
 .join(" ")
-.trim()
 .toLowerCase();
 
-if(made===sentences[puzzleIndex].toLowerCase()){
-document.getElementById("message").textContent="🎉 Great job!";
-speak("Great job!");
-document.getElementById("nextPuzzleBtn").style.display="inline-block";
-}else{
-document.getElementById("message").textContent="Try again";
-speak("Try again");
+if(
+made===
+sentences[
+puzzleIndex
+]
+.toLowerCase()
+){
+
+document.getElementById(
+"message"
+).textContent=
+"🎉 Great job!";
+
+document.getElementById(
+"nextPuzzleBtn"
+).style.display=
+"inline-block";
+
+speak(
+"Great job"
+);
+
 }
 
 }
@@ -220,77 +268,118 @@ function nextPuzzle(){
 
 puzzleIndex++;
 
-if(puzzleIndex>=sentences.length){
-
-document.getElementById("puzzleSection").style.display="none";
-document.getElementById("typingSection").style.display="block";
-
-typingIndex=0;
-loadTyping();
-
-speak("Now typing");
-
-return;
-}
+if(
+puzzleIndex<
+sentences.length
+){
 
 loadPuzzle();
 
+}else{
+
+speak(
+"Finished puzzles"
+);
+
 }
 
-/* ---------------- TYPING ---------------- */
+}
+
+/* TYPING */
 
 function loadTyping(){
 
-document.getElementById("typingCounter").textContent=
-"Typing "+(typingIndex+1)+" of "+sentences.length;
+document.getElementById(
+"typingCounter"
+).textContent=
+"Typing "+
+(
+typingIndex+1
+)+
+" of "+
+sentences.length;
 
-document.getElementById("typingSentence").textContent=
-sentences[typingIndex];
+document.getElementById(
+"typingSentence"
+).textContent=
+sentences[
+typingIndex
+];
 
-document.getElementById("typingBox").value="";
-document.getElementById("typingMessage").textContent="";
+document.getElementById(
+"typingBox"
+).value="";
 
-document.getElementById("nextTypingBtn").style.display="none";
+document.getElementById(
+"typingMessage"
+).textContent="";
+
+document.getElementById(
+"nextTypingBtn"
+).style.display=
+"none";
 
 }
 
-let lastWord="";
+document
+.getElementById(
+"typingBox"
+)
+.addEventListener(
+"input",
+function(){
 
-document.getElementById("typingBox").addEventListener("input",function(){
+if(
+this.value
+.trim()
+.toLowerCase()
+===
+sentences[
+typingIndex
+]
+.toLowerCase()
+){
 
-let text=this.value;
-let words=text.trim().split(/\s+/);
-let last=words[words.length-1];
+document.getElementById(
+"typingMessage"
+).textContent=
+"🎉 Great typing!";
 
-if(text.endsWith(" ") && last && last!==lastWord){
-lastWord=last;
-speak(last);
+document.getElementById(
+"nextTypingBtn"
+).style.display=
+"inline-block";
+
+speak(
+"Great typing"
+);
+
 }
 
-if(text.trim().toLowerCase()===sentences[typingIndex].toLowerCase()){
-document.getElementById("typingMessage").textContent="🎉 Great typing!";
-speak("Great typing");
-document.getElementById("nextTypingBtn").style.display="inline-block";
 }
-
-});
+);
 
 function nextTyping(){
 
 typingIndex++;
 
-if(typingIndex>=sentences.length){
-speak("Finished typing");
-return;
-}
+if(
+typingIndex<
+sentences.length
+){
 
 loadTyping();
 
+}else{
+
+speak(
+"Finished typing"
+);
+
 }
 
-loadPuzzle();
+}
 
 </script>
 
 </body>
-</html>
