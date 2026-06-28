@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
+<meta
+name="viewport"
 content="width=device-width,initial-scale=1">
 
-<title>Sentence Learning System</title>
+<title>
+Sentence Learning System
+</title>
 
 <style>
 
@@ -25,15 +27,10 @@ margin:auto;
 }
 
 .section{
-
 background:white;
-
 padding:30px;
-
 border-radius:24px;
-
-box-shadow:0 4px 12px #bbb;
-
+box-shadow:0 4px 10px #bbb;
 }
 
 button{
@@ -121,7 +118,7 @@ box-sizing:border-box;
 
 .message{
 
-font-size:30px;
+font-size:28px;
 
 font-weight:bold;
 
@@ -139,19 +136,21 @@ margin-top:15px;
 
 <div
 class="section"
-id="menu">
+id="home">
 
 <h1>
 Sentence Learning System 🔊
 </h1>
 
-<button id="lessonBtn">
+<button
+onclick="openLessons()">
 
 ✏️ Lessons
 
 </button>
 
-<button id="puzzleBtn">
+<button
+onclick="openPuzzles()">
 
 🧩 Puzzles
 
@@ -159,24 +158,22 @@ Sentence Learning System 🔊
 
 </div>
 
-<!-- LESSON -->
-
 <div
 class="section"
-id="lesson"
+id="lessonScreen"
 
 style="display:none;">
 
-<h2 id="lessonCount"></h2>
+<h2 id="lessonCounter"></h2>
 
 <div
-id="lessonSentence"
-
-class="sentence">
+class="sentence"
+id="lessonText">
 
 </div>
 
-<button id="lessonRead">
+<button
+onclick="readLesson()">
 
 🔊 Read
 
@@ -188,16 +185,17 @@ id="lessonInput"
 placeholder="Type sentence">
 
 <div
-id="lessonMsg"
-
-class="message">
+class="message"
+id="lessonMessage">
 
 </div>
 
 <button
 id="lessonNext"
 
-style="display:none;">
+style="display:none"
+
+onclick="nextLesson()">
 
 Keep Going ➡️
 
@@ -205,31 +203,29 @@ Keep Going ➡️
 
 </div>
 
-<!-- PUZZLE -->
-
 <div
 class="section"
-id="puzzle"
+id="puzzleScreen"
 
 style="display:none;">
 
-<h2 id="puzzleCount"></h2>
+<h2 id="puzzleCounter"></h2>
 
 <div
-id="puzzleSentence"
-
-class="sentence">
+class="sentence"
+id="puzzleText">
 
 </div>
 
-<button id="puzzleRead">
+<button
+onclick="readPuzzle()">
 
 🔊 Read
 
 </button>
 
 <div
-id="bank"
+id="wordBank"
 
 class="word-bank">
 
@@ -242,23 +238,25 @@ class="target">
 
 </div>
 
-<button id="checkPuzzle">
+<button
+onclick="checkPuzzle()">
 
 Check ✅
 
 </button>
 
 <div
-id="puzzleMsg"
-
-class="message">
+class="message"
+id="puzzleMessage">
 
 </div>
 
 <button
 id="puzzleNext"
 
-style="display:none;">
+style="display:none"
+
+onclick="nextPuzzle()">
 
 Keep Going ➡️
 
@@ -270,7 +268,7 @@ Keep Going ➡️
 
 <script>
 
-const lessons=[
+const data=[
 
 "I like to eat watermelon every day",
 
@@ -284,9 +282,9 @@ const lessons=[
 
 ];
 
-let lesson=0;
+let lessonIndex=0;
 
-let puzzle=0;
+let puzzleIndex=0;
 
 let lastWord="";
 
@@ -295,49 +293,56 @@ function speak(text){
 speechSynthesis.cancel();
 
 speechSynthesis.speak(
+
 new SpeechSynthesisUtterance(
 text
-));
+)
+
+);
 
 }
 
 /* OPEN */
 
+function openLessons(){
+
 document
 .getElementById(
-"lessonBtn"
+"home"
 )
-
-.onclick=
-()=>{
-
-menu.style.display=
+.style.display=
 "none";
 
-lesson.style.display=
+document
+.getElementById(
+"lessonScreen"
+)
+.style.display=
 "block";
 
 loadLesson();
 
-};
+}
+
+function openPuzzles(){
 
 document
 .getElementById(
-"puzzleBtn"
+"home"
 )
-
-.onclick=
-()=>{
-
-menu.style.display=
+.style.display=
 "none";
 
-puzzle.style.display=
+document
+.getElementById(
+"puzzleScreen"
+)
+.style.display=
 "block";
 
 loadPuzzle();
 
-};
+}
 
 /* LESSON */
 
@@ -345,23 +350,23 @@ function loadLesson(){
 
 document
 .getElementById(
-"lessonCount"
+"lessonCounter"
 )
 .textContent=
 
 `Lesson ${
-lesson+1
+lessonIndex+1
 } of ${
-lessons.length
+data.length
 }`;
 
 document
 .getElementById(
-"lessonSentence"
+"lessonText"
 )
 .textContent=
-lessons[
-lesson
+data[
+lessonIndex
 ];
 
 document
@@ -372,7 +377,7 @@ document
 
 document
 .getElementById(
-"lessonMsg"
+"lessonMessage"
 )
 .textContent="";
 
@@ -387,18 +392,21 @@ lastWord="";
 
 }
 
-lessonRead.onclick=
-()=>{
+function readLesson(){
 
 speak(
-lessons[
-lesson
+data[
+lessonIndex
 ]
 );
 
-};
+}
 
-lessonInput
+document
+.getElementById(
+"lessonInput"
+)
+
 .addEventListener(
 "input",
 
@@ -448,17 +456,25 @@ text
 
 ===
 
-lessons[
-lesson
+data[
+lessonIndex
 ]
 .toLowerCase()
 
 ){
 
-lessonMsg.textContent=
+document
+.getElementById(
+"lessonMessage"
+)
+.textContent=
 "🎉 Great lesson!";
 
-lessonNext.style.display=
+document
+.getElementById(
+"lessonNext"
+)
+.style.display=
 "block";
 
 }
@@ -467,57 +483,78 @@ lessonNext.style.display=
 
 );
 
-lessonNext.onclick=
-()=>{
+function nextLesson(){
 
-lesson++;
+lessonIndex++;
 
 if(
-lesson<
-lessons.length
+lessonIndex<
+data.length
 ){
 
 loadLesson();
 
 }
 
-};
+}
 
 /* PUZZLE */
 
 function loadPuzzle(){
 
-puzzleCount.textContent=
+document
+.getElementById(
+"puzzleCounter"
+)
+.textContent=
 
 `Puzzle ${
-puzzle+1
+puzzleIndex+1
 } of ${
-lessons.length
+data.length
 }`;
 
-puzzleSentence.textContent=
-
-lessons[
-puzzle
+document
+.getElementById(
+"puzzleText"
+)
+.textContent=
+data[
+puzzleIndex
 ];
 
-bank.innerHTML="";
+document
+.getElementById(
+"wordBank"
+)
+.innerHTML="";
 
-target.innerHTML="";
+document
+.getElementById(
+"target"
+)
+.innerHTML="";
 
-puzzleMsg.textContent="";
+document
+.getElementById(
+"puzzleMessage"
+)
+.textContent="";
 
-puzzleNext.style.display=
+document
+.getElementById(
+"puzzleNext"
+)
+.style.display=
 "none";
 
 let words=
 
 [
 ...
-lessons[
-puzzle
+data[
+puzzleIndex
 ]
-
 .split(" ")
 ];
 
@@ -527,38 +564,44 @@ words.sort(
 
 words.forEach(word=>{
 
-let div=
+let tile=
 document
 .createElement(
 "div"
 );
 
-div.className=
+tile.className=
 "word";
 
-div.textContent=
+tile.textContent=
 word;
 
-div.onclick=
+tile.onclick=
 ()=>{
 
 if(
-div.parentNode===
-bank
+tile.parentNode.id===
+"wordBank"
 ){
 
-target
+document
+.getElementById(
+"target"
+)
 .appendChild(
-div
+tile
 );
 
 }
 
 else{
 
-bank
+document
+.getElementById(
+"wordBank"
+)
 .appendChild(
-div
+tile
 );
 
 }
@@ -569,34 +612,39 @@ word
 
 };
 
-bank
+document
+.getElementById(
+"wordBank"
+)
 .appendChild(
-div
+tile
 );
 
 });
 
 }
 
-puzzleRead.onclick=
-()=>{
+function readPuzzle(){
 
 speak(
-lessons[
-puzzle
+data[
+puzzleIndex
 ]
 );
 
-};
+}
 
-checkPuzzle.onclick=
-()=>{
+function checkPuzzle(){
 
 let answer=
 
 [
 ...
-target.children
+document
+.getElementById(
+"target"
+)
+.children
 ]
 
 .map(
@@ -604,7 +652,9 @@ x=>
 x.textContent
 )
 
-.join(" ");
+.join(
+" "
+);
 
 if(
 
@@ -613,41 +663,47 @@ answer
 
 ===
 
-lessons[
-puzzle
+data[
+puzzleIndex
 ]
 .toLowerCase()
 
 ){
 
-puzzleMsg.textContent=
+document
+.getElementById(
+"puzzleMessage"
+)
+.textContent=
 "🎉 Great puzzle!";
 
-puzzleNext.style.display=
+document
+.getElementById(
+"puzzleNext"
+)
+.style.display=
 "block";
 
 }
 
-};
+}
 
-puzzleNext.onclick=
-()=>{
+function nextPuzzle(){
 
-puzzle++;
+puzzleIndex++;
 
 if(
-puzzle<
-lessons.length
+puzzleIndex<
+data.length
 ){
 
 loadPuzzle();
 
 }
 
-};
+}
 
 </script>
 
 </body>
-
 </html>
