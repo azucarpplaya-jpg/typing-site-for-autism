@@ -9,9 +9,7 @@
 name="viewport"
 content="width=device-width,initial-scale=1">
 
-<title>
-Learning System
-</title>
+<title>Learning System</title>
 
 <style>
 
@@ -20,26 +18,18 @@ box-sizing:border-box;
 }
 
 body{
-
 margin:0;
-
-font-family:
-Arial,
-sans-serif;
-
+font-family:Arial,sans-serif;
 background:#eef5ff;
-
 }
 
 .screen{
 
 display:flex;
 
-flex-direction:column;
+justify-content:center;
 
-align-items:center;
-
-padding:30px;
+padding:25px;
 
 min-height:100vh;
 
@@ -47,30 +37,24 @@ min-height:100vh;
 
 .card{
 
-background:white;
-
 width:100%;
 
-max-width:850px;
+max-width:900px;
 
-border-radius:28px;
+background:white;
 
-padding:35px;
+border-radius:30px;
+
+padding:30px;
 
 box-shadow:
-0 10px 30px
+0 12px 30px
 rgba(0,0,0,.08);
 
 }
 
-h1{
-
+h1,h2{
 text-align:center;
-
-font-size:44px;
-
-color:#244;
-
 }
 
 .grid{
@@ -81,13 +65,11 @@ grid-template-columns:
 repeat(
 auto-fit,
 minmax(
-180px,
+160px,
 1fr
 ));
 
 gap:18px;
-
-margin-top:30px;
 
 }
 
@@ -95,49 +77,33 @@ margin-top:30px;
 
 height:150px;
 
-border-radius:24px;
-
 display:flex;
 
 align-items:center;
 
 justify-content:center;
 
+border-radius:28px;
+
 font-size:34px;
 
 font-weight:bold;
 
-background:
-linear-gradient(
-135deg,
-#75d3ff,
-#5e8dff
-);
+cursor:pointer;
 
 color:white;
 
-cursor:pointer;
-
-transition:.15s;
-
-}
-
-.box:hover{
-
-transform:
-translateY(-3px);
-
-}
-
-.lessonBox{
-
 background:
 linear-gradient(
 135deg,
-#7ee7c4,
-#57b7ff
+#69a8ff,
+#5fd8bf
 );
 
+}
+
+.box:active{
+transform:scale(.98);
 }
 
 .sentence{
@@ -146,34 +112,9 @@ font-size:38px;
 
 text-align:center;
 
-margin:40px 0;
+margin:30px 0;
 
-line-height:1.5;
-
-}
-
-input{
-
-width:100%;
-
-font-size:34px;
-
-padding:24px;
-
-border-radius:24px;
-
-border:
-3px solid
-#d8e5ff;
-
-outline:none;
-
-}
-
-input:focus{
-
-border-color:
-#69a8ff;
+line-height:1.4;
 
 }
 
@@ -181,9 +122,7 @@ button{
 
 width:100%;
 
-padding:24px;
-
-margin-top:20px;
+padding:22px;
 
 font-size:28px;
 
@@ -197,6 +136,22 @@ color:white;
 
 cursor:pointer;
 
+margin-top:18px;
+
+}
+
+input{
+
+width:100%;
+
+font-size:34px;
+
+padding:22px;
+
+border-radius:22px;
+
+border:3px solid #d8e5ff;
+
 }
 
 .words{
@@ -207,31 +162,30 @@ flex-wrap:wrap;
 
 gap:14px;
 
-padding:20px;
-
-background:#edf7ff;
+padding:18px;
 
 border-radius:22px;
 
-min-height:120px;
+min-height:110px;
 
 }
 
-.target{
+#bank{
+background:#edf7ff;
+}
 
+#target{
+background:#fff6d9;
 margin-top:20px;
-
-background:#fff7dd;
-
 }
 
 .word{
 
+background:white;
+
 padding:16px;
 
-font-size:28px;
-
-background:white;
+font-size:30px;
 
 border-radius:18px;
 
@@ -241,19 +195,19 @@ cursor:pointer;
 
 .good{
 
+font-size:56px;
+
 text-align:center;
 
-font-size:54px;
-
-margin:50px;
+margin-top:60px;
 
 }
 
 .small{
 
-text-align:center;
+font-size:26px;
 
-font-size:28px;
+text-align:center;
 
 color:#666;
 
@@ -275,7 +229,7 @@ id="modeScreen">
 
 <h1>
 
-Choose Activity
+Sentence Learning
 
 </h1>
 
@@ -283,8 +237,7 @@ Choose Activity
 
 <div
 class="box"
-
-onclick="chooseMode('typing')">
+onclick="choose('typing')">
 
 ✏️ Typing
 
@@ -292,8 +245,7 @@ onclick="chooseMode('typing')">
 
 <div
 class="box"
-
-onclick="chooseMode('puzzle')">
+onclick="choose('puzzle')">
 
 🧩 Puzzle
 
@@ -309,7 +261,6 @@ onclick="chooseMode('puzzle')">
 
 <div
 class="screen"
-
 id="lessonScreen"
 
 style="display:none">
@@ -336,7 +287,6 @@ id="lessonGrid">
 
 <div
 class="screen"
-
 id="activity"
 
 style="display:none">
@@ -344,7 +294,7 @@ style="display:none">
 <div class="card">
 
 <h2
-id="count">
+id="counter">
 
 </h2>
 
@@ -383,7 +333,7 @@ id="bank">
 </div>
 
 <div
-class="words target"
+class="words"
 id="target">
 
 </div>
@@ -391,7 +341,7 @@ id="target">
 <button
 onclick="checkPuzzle()">
 
-Check
+Check ✅
 
 </button>
 
@@ -405,7 +355,6 @@ Check
 
 <div
 class="screen"
-
 id="good"
 
 style="display:none">
@@ -463,26 +412,22 @@ function speak(text){
 
 speechSynthesis.cancel();
 
-speechSynthesis.speak(
+let u=
 new SpeechSynthesisUtterance(
 text
-));
+);
 
-}
+u.rate=.85;
 
-function readSentence(){
-
-speak(
-lessons[
-current
-]
+speechSynthesis.speak(
+u
 );
 
 }
 
 /* MODE */
 
-function chooseMode(m){
+function choose(m){
 
 mode=m;
 
@@ -500,13 +445,13 @@ document
 .style.display=
 "flex";
 
-makeLessons();
+drawLessons();
 
 }
 
-/* LESSONS */
+/* LESSON BOXES */
 
-function makeLessons(){
+function drawLessons(){
 
 let grid=
 document
@@ -522,19 +467,19 @@ x,
 i
 )=>{
 
-let div=
+let box=
 document
 .createElement(
 "div"
 );
 
-div.className=
-"box lessonBox";
+box.className=
+"box";
 
-div.textContent=
+box.textContent=
 i+1;
 
-div.onclick=
+box.onclick=
 ()=>{
 
 current=i;
@@ -544,18 +489,27 @@ openLesson();
 };
 
 grid.appendChild(
-div
+box
 );
 
 });
 
 }
 
+/* OPEN */
+
 function openLesson(){
 
 document
 .getElementById(
 "lessonScreen"
+)
+.style.display=
+"none";
+
+document
+.getElementById(
+"good"
 )
 .style.display=
 "none";
@@ -569,7 +523,7 @@ document
 
 document
 .getElementById(
-"count"
+"counter"
 )
 .textContent=
 
@@ -596,47 +550,75 @@ if(
 mode==="typing"
 ){
 
-typingMode();
+startTyping();
 
 }
 
 else{
 
-puzzleMode();
+startPuzzle();
 
 }
+
+}
+
+function readSentence(){
+
+speak(
+lessons[
+current
+]
+);
 
 }
 
 /* TYPING */
 
-function typingMode(){
+function startTyping(){
 
-typingArea.style.display=
+document
+.getElementById(
+"typingArea"
+)
+.style.display=
 "block";
 
-puzzleArea.style.display=
+document
+.getElementById(
+"puzzleArea"
+)
+.style.display=
 "none";
 
-typingInput.value="";
+let input=
+document
+.getElementById(
+"typingInput"
+);
 
-typingInput.focus();
+input.value="";
+
+input.focus();
 
 lastWord="";
 
 }
 
-typingInput
+document
+.getElementById(
+"typingInput"
+)
+
 .addEventListener(
 "input",
 
 function(){
 
-let t=
+let text=
 this.value;
 
 let words=
-t
+text
 .trim()
 .split(/\s+/);
 
@@ -647,7 +629,7 @@ words.length-1
 
 if(
 
-t.endsWith(" ")
+text.endsWith(" ")
 
 &&
 
@@ -670,7 +652,8 @@ newest
 
 if(
 
-t.trim()
+text
+.trim()
 .toLowerCase()
 
 ===
@@ -692,13 +675,33 @@ finish();
 
 /* PUZZLE */
 
-function puzzleMode(){
+function startPuzzle(){
 
-typingArea.style.display=
+document
+.getElementById(
+"typingArea"
+)
+.style.display=
 "none";
 
-puzzleArea.style.display=
+document
+.getElementById(
+"puzzleArea"
+)
+.style.display=
 "block";
+
+let bank=
+document
+.getElementById(
+"bank"
+);
+
+let target=
+document
+.getElementById(
+"target"
+);
 
 bank.innerHTML="";
 target.innerHTML="";
@@ -719,44 +722,49 @@ words.sort(
 words.forEach(
 word=>{
 
-let d=
+let tile=
 document
 .createElement(
 "div"
 );
 
-d.className=
+tile.className=
 "word";
 
-d.textContent=
+tile.textContent=
 word;
 
-d.onclick=
+tile.onclick=
 ()=>{
 
 if(
-d.parentNode===
+tile.parentNode===
 bank
 ){
 
-target.appendChild(
-d
+target
+.appendChild(
+tile
 );
 
 }
-
 else{
 
-bank.appendChild(
-d
+bank
+.appendChild(
+tile
 );
 
 }
+
+speak(
+word
+);
 
 };
 
 bank.appendChild(
-d
+tile
 );
 
 });
@@ -765,11 +773,15 @@ d
 
 function checkPuzzle(){
 
-let made=
+let answer=
 
 [
 ...
-target.children
+document
+.getElementById(
+"target"
+)
+.children
 ]
 
 .map(
@@ -777,11 +789,13 @@ x=>
 x.textContent
 )
 
-.join(" ");
+.join(
+" "
+);
 
 if(
 
-made
+answer
 .toLowerCase()
 
 ===
@@ -803,10 +817,18 @@ finish();
 
 function finish(){
 
-activity.style.display=
+document
+.getElementById(
+"activity"
+)
+.style.display=
 "none";
 
-good.style.display=
+document
+.getElementById(
+"good"
+)
+.style.display=
 "flex";
 
 }
@@ -820,9 +842,6 @@ current<
 lessons.length
 ){
 
-good.style.display=
-"none";
-
 openLesson();
 
 }
@@ -835,7 +854,7 @@ document.body.innerHTML=
 <div class="screen">
 <div class="card">
 <div class="good">
-🏆 Finished
+🏆 Finished All Lessons
 </div>
 </div>
 </div>
