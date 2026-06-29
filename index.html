@@ -1,108 +1,238 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Learning System</title>
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>
+Learning System
+</title>
 
 <style>
 
-*{box-sizing:border-box}
+*{
+box-sizing:border-box;
+}
 
 body{
+
 margin:0;
-font-family:Arial,sans-serif;
+
+font-family:
+Arial,
+sans-serif;
+
 background:#eef5ff;
+
 }
 
 .screen{
+
 display:flex;
+
 justify-content:center;
+
 padding:25px;
+
 min-height:100vh;
+
 }
 
 .card{
+
 width:100%;
+
 max-width:900px;
+
 background:white;
-padding:30px;
+
+padding:35px;
+
 border-radius:30px;
-box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+box-shadow:
+0 10px 30px
+rgba(0,0,0,.08);
+
+}
+
+h1,h2{
+
+text-align:center;
+
 }
 
 .grid{
+
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+
+grid-template-columns:
+repeat(
+auto-fit,
+minmax(
+150px,
+1fr
+));
+
 gap:18px;
+
 }
 
 .box{
+
 height:150px;
-border-radius:25px;
+
 display:flex;
+
 justify-content:center;
+
 align-items:center;
-font-size:36px;
+
+font-size:38px;
+
 font-weight:bold;
-background:linear-gradient(135deg,#69a8ff,#5fd8bf);
-color:white;
+
+border-radius:24px;
+
 cursor:pointer;
+
+background:
+linear-gradient(
+135deg,
+#69a8ff,
+#5fd8bf
+);
+
+color:white;
+
+}
+
+.box:active{
+
+transform:
+scale(.98);
+
 }
 
 .sentence{
+
 font-size:36px;
+
 text-align:center;
-margin:25px 0;
+
+margin:30px 0;
+
+line-height:1.5;
+
 }
 
 button{
+
 width:100%;
+
 padding:22px;
+
 font-size:28px;
+
 border:none;
+
 border-radius:22px;
+
 background:#69a8ff;
+
 color:white;
-margin-top:15px;
+
+margin-top:18px;
+
 }
 
 input{
+
 width:100%;
+
 padding:20px;
-font-size:30px;
-border-radius:20px;
+
+font-size:32px;
+
+border-radius:22px;
+
+border:
+3px solid
+#dbe7ff;
+
 }
 
 .words{
+
 display:flex;
+
 flex-wrap:wrap;
+
 gap:12px;
+
 padding:18px;
+
 border-radius:20px;
+
 min-height:120px;
+
 }
 
 #bank{
+
 background:#edf7ff;
+
 }
 
 #target{
-background:#fff6d9;
+
+background:#fff7d5;
+
 margin-top:20px;
+
 }
 
 .word{
-background:white;
+
 padding:16px;
-border-radius:18px;
+
 font-size:30px;
+
+background:white;
+
+border-radius:18px;
+
 cursor:pointer;
+
 }
 
 .good{
-font-size:52px;
+
+font-size:54px;
+
 text-align:center;
+
+}
+
+.small{
+
+text-align:center;
+
+font-size:28px;
+
+color:#666;
+
+}
+
+.lock{
+
+opacity:.35;
+
 }
 
 </style>
@@ -111,27 +241,37 @@ text-align:center;
 
 <body>
 
-<div class="screen" id="mode">
+<!-- MODE -->
+
+<div
+class="screen"
+id="mode">
 
 <div class="card">
 
-<h1>Choose Activity</h1>
+<h1>
+
+Choose Activity
+
+</h1>
 
 <div class="grid">
 
 <div
 class="box"
+
 onclick="choose('typing')">
 
-✏️
+✏️ Typing
 
 </div>
 
 <div
 class="box"
+
 onclick="choose('puzzle')">
 
-🧩
+🧩 Puzzle
 
 </div>
 
@@ -140,16 +280,23 @@ onclick="choose('puzzle')">
 </div>
 
 </div>
+
+<!-- LESSONS -->
 
 <div
 class="screen"
+
 id="lessons"
 
 style="display:none">
 
 <div class="card">
 
-<h1>Choose Lesson</h1>
+<h1>
+
+Choose Lesson
+
+</h1>
 
 <div
 class="grid"
@@ -161,8 +308,11 @@ id="lessonGrid">
 
 </div>
 
+<!-- ACTIVITY -->
+
 <div
 class="screen"
+
 id="activity"
 
 style="display:none">
@@ -177,16 +327,20 @@ id="sentence">
 
 </div>
 
-<button onclick="readSentence()">
+<button
+onclick="readSentence()">
 
 🔊 Read
 
 </button>
 
-<div id="typingArea">
+<div
+id="typingArea">
 
 <input
-id="typingInput">
+id="typingInput"
+
+placeholder="Type here">
 
 </div>
 
@@ -212,7 +366,7 @@ class="words">
 <button
 onclick="checkPuzzle()">
 
-Check
+Check ✅
 
 </button>
 
@@ -222,21 +376,34 @@ Check
 
 </div>
 
+<!-- GOOD -->
+
 <div
 class="screen"
+
 id="good"
 
 style="display:none">
 
 <div class="card">
 
-<div class="good">
+<div
+class="good"
+id="goodTitle">
 
 🎉 Good Job!
 
 </div>
 
+<div class="small">
+
+Ready for the next one?
+
+</div>
+
 <button
+id="nextBtn"
+
 onclick="nextLesson()">
 
 Keep Going ➡️
@@ -263,11 +430,15 @@ const lessons=[
 
 ];
 
-let current=0;
-
 let mode="typing";
 
+let current=0;
+
+let unlocked=1;
+
 let lastWord="";
+
+/* SPEAK */
 
 function speak(text){
 
@@ -284,16 +455,19 @@ u
 
 }
 
+/* MODE */
+
 function choose(m){
 
 mode=m;
 
-modeScreen=
-document.getElementById(
-"mode"
-);
+mode.style?.display;
 
-modeScreen.style.display=
+document
+.getElementById(
+"mode"
+)
+.style.display=
 "none";
 
 document
@@ -306,6 +480,8 @@ document
 drawLessons();
 
 }
+
+/* LESSONS */
 
 function drawLessons(){
 
@@ -332,6 +508,11 @@ document
 d.className=
 "box";
 
+if(
+i<
+unlocked
+){
+
 d.textContent=
 i+1;
 
@@ -340,9 +521,22 @@ d.onclick=
 
 current=i;
 
-open();
+openLesson();
 
 };
+
+}
+
+else{
+
+d.textContent=
+"🔒";
+
+d.classList.add(
+"lock"
+);
+
+}
 
 grid.appendChild(
 d
@@ -352,15 +546,15 @@ d
 
 }
 
-function open(){
+/* OPEN */
 
-lessonsScreen=
+function openLesson(){
+
 document
 .getElementById(
 "lessons"
-);
-
-lessonsScreen.style.display=
+)
+.style.display=
 "none";
 
 document
@@ -378,10 +572,21 @@ document
 "flex";
 
 counter.textContent=
-`${mode} ${current+1}`;
+
+`${mode==="typing"
+?
+"Lesson"
+:
+"Puzzle"}
+
+ ${
+current+1
+}`;
 
 sentence.textContent=
-lessons[current];
+lessons[
+current
+];
 
 if(
 mode==="typing"
@@ -422,6 +627,8 @@ puzzleArea.style.display=
 typingInput.value="";
 
 typingInput.focus();
+
+lastWord="";
 
 }
 
@@ -530,16 +737,12 @@ tile.className=
 tile.textContent=
 word;
 
-tile.addEventListener(
-"click",
-
+tile.onclick=
 ()=>{
 
 speak(
 word
 );
-
-/* WAIT */
 
 setTimeout(
 ()=>{
@@ -567,9 +770,7 @@ tile
 120
 );
 
-}
-
-);
+};
 
 bank.appendChild(
 tile
@@ -581,7 +782,7 @@ tile
 
 function checkPuzzle(){
 
-let made=
+let answer=
 
 [
 ...
@@ -593,11 +794,13 @@ x=>
 x.textContent
 )
 
-.join(" ");
+.join(
+" "
+);
 
 if(
 
-made
+answer
 .toLowerCase()
 
 ===
@@ -615,6 +818,8 @@ finish();
 
 }
 
+/* FINISH */
+
 function finish(){
 
 activity.style.display=
@@ -629,14 +834,53 @@ function nextLesson(){
 
 current++;
 
+unlocked=
+Math.max(
+unlocked,
+current+1
+);
+
 if(
 current<
 lessons.length
 ){
 
-open();
+openLesson();
 
 }
+
+else{
+
+goodTitle.textContent=
+"🏆 Finished!";
+
+nextBtn.textContent=
+"Go Back To Main Menu";
+
+nextBtn.onclick=
+backHome;
+
+}
+
+}
+
+function backHome(){
+
+current=0;
+
+document
+.getElementById(
+"good"
+)
+.style.display=
+"none";
+
+document
+.getElementById(
+"mode"
+)
+.style.display=
+"flex";
 
 }
 
