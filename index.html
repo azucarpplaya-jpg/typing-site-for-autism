@@ -1,134 +1,69 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width,initial-scale=1">
-
-<title>
-Learning System
-</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Learning System</title>
 
 <style>
 
-*{
-box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
-
 margin:0;
-
-font-family:
-Arial,
-sans-serif;
-
+font-family:Arial,sans-serif;
 background:#eef5ff;
-
 }
 
 .screen{
-
 display:flex;
-
 justify-content:center;
-
-padding:25px;
-
+padding:24px;
 min-height:100vh;
-
 }
 
 .card{
-
 width:100%;
-
 max-width:900px;
-
 background:white;
-
-padding:35px;
-
+padding:32px;
 border-radius:30px;
-
-box-shadow:
-0 10px 30px
-rgba(0,0,0,.08);
-
-}
-
-h1,h2{
-
-text-align:center;
-
+box-shadow:0 10px 30px rgba(0,0,0,.08);
 }
 
 .grid{
-
 display:grid;
-
 grid-template-columns:
-repeat(
-auto-fit,
-minmax(
-150px,
-1fr
-));
-
+repeat(auto-fit,minmax(150px,1fr));
 gap:18px;
-
 }
 
 .box{
-
 height:150px;
-
 display:flex;
-
-justify-content:center;
-
 align-items:center;
-
-font-size:38px;
-
+justify-content:center;
+font-size:36px;
 font-weight:bold;
-
-border-radius:24px;
-
+border-radius:25px;
 cursor:pointer;
-
+color:white;
 background:
 linear-gradient(
 135deg,
 #69a8ff,
 #5fd8bf
 );
-
-color:white;
-
 }
 
-.box:active{
-
-transform:
-scale(.98);
-
+.lock{
+opacity:.35;
 }
 
 .sentence{
-
 font-size:36px;
-
 text-align:center;
-
 margin:30px 0;
-
-line-height:1.5;
-
 }
 
 button{
@@ -155,15 +90,11 @@ input{
 
 width:100%;
 
-padding:20px;
+padding:22px;
 
 font-size:32px;
 
-border-radius:22px;
-
-border:
-3px solid
-#dbe7ff;
+border-radius:20px;
 
 }
 
@@ -177,33 +108,28 @@ gap:12px;
 
 padding:18px;
 
-border-radius:20px;
-
 min-height:120px;
+
+border-radius:20px;
 
 }
 
 #bank{
-
 background:#edf7ff;
-
 }
 
 #target{
-
 background:#fff7d5;
-
 margin-top:20px;
-
 }
 
 .word{
 
+background:white;
+
 padding:16px;
 
-font-size:30px;
-
-background:white;
+font-size:28px;
 
 border-radius:18px;
 
@@ -213,25 +139,9 @@ cursor:pointer;
 
 .good{
 
-font-size:54px;
+font-size:52px;
 
 text-align:center;
-
-}
-
-.small{
-
-text-align:center;
-
-font-size:28px;
-
-color:#666;
-
-}
-
-.lock{
-
-opacity:.35;
 
 }
 
@@ -241,11 +151,9 @@ opacity:.35;
 
 <body>
 
-<!-- MODE -->
-
 <div
 class="screen"
-id="mode">
+id="home">
 
 <div class="card">
 
@@ -259,7 +167,6 @@ Choose Activity
 
 <div
 class="box"
-
 onclick="choose('typing')">
 
 ✏️ Typing
@@ -268,7 +175,6 @@ onclick="choose('typing')">
 
 <div
 class="box"
-
 onclick="choose('puzzle')">
 
 🧩 Puzzle
@@ -281,22 +187,15 @@ onclick="choose('puzzle')">
 
 </div>
 
-<!-- LESSONS -->
-
 <div
 class="screen"
-
-id="lessons"
+id="lessonScreen"
 
 style="display:none">
 
 <div class="card">
 
-<h1>
-
-Choose Lesson
-
-</h1>
+<h1 id="title"></h1>
 
 <div
 class="grid"
@@ -308,11 +207,8 @@ id="lessonGrid">
 
 </div>
 
-<!-- ACTIVITY -->
-
 <div
 class="screen"
-
 id="activity"
 
 style="display:none">
@@ -334,13 +230,10 @@ onclick="readSentence()">
 
 </button>
 
-<div
-id="typingArea">
+<div id="typingArea">
 
 <input
-id="typingInput"
-
-placeholder="Type here">
+id="typingInput">
 
 </div>
 
@@ -350,23 +243,21 @@ id="puzzleArea"
 style="display:none">
 
 <div
-id="bank"
-
-class="words">
+class="words"
+id="bank">
 
 </div>
 
 <div
-id="target"
-
-class="words">
+class="words"
+id="target">
 
 </div>
 
 <button
 onclick="checkPuzzle()">
 
-Check ✅
+Check
 
 </button>
 
@@ -376,12 +267,9 @@ Check ✅
 
 </div>
 
-<!-- GOOD -->
-
 <div
 class="screen"
-
-id="good"
+id="finish"
 
 style="display:none">
 
@@ -389,22 +277,14 @@ style="display:none">
 
 <div
 class="good"
-id="goodTitle">
+id="finishTitle">
 
 🎉 Good Job!
 
 </div>
 
-<div class="small">
-
-Ready for the next one?
-
-</div>
-
 <button
-id="nextBtn"
-
-onclick="nextLesson()">
+id="nextButton">
 
 Keep Going ➡️
 
@@ -434,64 +314,65 @@ let mode="typing";
 
 let current=0;
 
-let unlocked=1;
+let typingUnlocked=1;
+
+let puzzleUnlocked=1;
 
 let lastWord="";
 
-/* SPEAK */
-
-function speak(text){
-
-let u=
-new SpeechSynthesisUtterance(
-text
-);
-
-u.rate=.85;
+function speak(t){
 
 speechSynthesis.speak(
-u
+
+new SpeechSynthesisUtterance(
+t
+)
+
 );
 
 }
-
-/* MODE */
 
 function choose(m){
 
 mode=m;
 
-mode.style?.display;
-
-document
-.getElementById(
-"mode"
-)
-.style.display=
+home.style.display=
 "none";
 
-document
-.getElementById(
-"lessons"
-)
-.style.display=
+lessonScreen.style.display=
 "flex";
 
-drawLessons();
+title.textContent=
+
+mode==="typing"
+
+?
+
+"Choose Lesson"
+
+:
+
+"Choose Puzzle";
+
+draw();
 
 }
 
-/* LESSONS */
+function draw(){
 
-function drawLessons(){
+lessonGrid.innerHTML="";
 
-let grid=
-document
-.getElementById(
-"lessonGrid"
-);
+let unlocked=
 
-grid.innerHTML="";
+mode==="typing"
+
+?
+
+typingUnlocked
+
+:
+
+puzzleUnlocked;
 
 lessons.forEach(
 (
@@ -538,7 +419,7 @@ d.classList.add(
 
 }
 
-grid.appendChild(
+lessonGrid.appendChild(
 d
 );
 
@@ -546,44 +427,24 @@ d
 
 }
 
-/* OPEN */
-
 function openLesson(){
 
-document
-.getElementById(
-"lessons"
-)
-.style.display=
+lessonScreen.style.display=
 "none";
 
-document
-.getElementById(
-"good"
-)
-.style.display=
-"none";
-
-document
-.getElementById(
-"activity"
-)
-.style.display=
+activity.style.display=
 "flex";
 
 counter.textContent=
 
-`${mode==="typing"
-?
-"Lesson"
-:
-"Puzzle"}
+`${mode}
 
  ${
 current+1
 }`;
 
 sentence.textContent=
+
 lessons[
 current
 ];
@@ -592,13 +453,25 @@ if(
 mode==="typing"
 ){
 
-typing();
+typingArea.style.display=
+"block";
+
+puzzleArea.style.display=
+"none";
+
+typingInput.value="";
 
 }
 
 else{
 
-puzzle();
+typingArea.style.display=
+"none";
+
+puzzleArea.style.display=
+"block";
+
+loadPuzzle();
 
 }
 
@@ -615,22 +488,6 @@ current
 }
 
 /* TYPING */
-
-function typing(){
-
-typingArea.style.display=
-"block";
-
-puzzleArea.style.display=
-"none";
-
-typingInput.value="";
-
-typingInput.focus();
-
-lastWord="";
-
-}
 
 typingInput
 .addEventListener(
@@ -687,23 +544,17 @@ current
 
 ){
 
-finish();
+finishLesson();
 
 }
 
 }
-
-/* PUZZLE */
 
 );
 
-function puzzle(){
+/* PUZZLE */
 
-typingArea.style.display=
-"none";
-
-puzzleArea.style.display=
-"block";
+function loadPuzzle(){
 
 bank.innerHTML="";
 
@@ -725,19 +576,19 @@ words.sort(
 words.forEach(
 word=>{
 
-let tile=
+let d=
 document
 .createElement(
 "div"
 );
 
-tile.className=
+d.className=
 "word";
 
-tile.textContent=
+d.textContent=
 word;
 
-tile.onclick=
+d.onclick=
 ()=>{
 
 speak(
@@ -748,12 +599,12 @@ setTimeout(
 ()=>{
 
 if(
-tile.parentNode===
+d.parentNode===
 bank
 ){
 
 target.appendChild(
-tile
+d
 );
 
 }
@@ -761,7 +612,7 @@ tile
 else{
 
 bank.appendChild(
-tile
+d
 );
 
 }
@@ -773,7 +624,7 @@ tile
 };
 
 bank.appendChild(
-tile
+d
 );
 
 });
@@ -794,9 +645,7 @@ x=>
 x.textContent
 )
 
-.join(
-" "
-);
+.join(" ");
 
 if(
 
@@ -812,38 +661,61 @@ current
 
 ){
 
-finish();
+finishLesson();
 
 }
 
 }
 
-/* FINISH */
-
-function finish(){
+function finishLesson(){
 
 activity.style.display=
 "none";
 
-good.style.display=
+finish.style.display=
 "flex";
+
+nextButton.textContent=
+"Keep Going ➡️";
+
+nextButton.onclick=
+next;
 
 }
 
-function nextLesson(){
+function next(){
+
+if(
+mode==="typing"
+){
+
+typingUnlocked=
+Math.max(
+typingUnlocked,
+current+2
+);
+
+}
+
+else{
+
+puzzleUnlocked=
+Math.max(
+puzzleUnlocked,
+current+2
+);
+
+}
 
 current++;
-
-unlocked=
-Math.max(
-unlocked,
-current+1
-);
 
 if(
 current<
 lessons.length
 ){
+
+finish.style.display=
+"none";
 
 openLesson();
 
@@ -851,41 +723,30 @@ openLesson();
 
 else{
 
-goodTitle.textContent=
+finishTitle.textContent=
 "🏆 Finished!";
 
-nextBtn.textContent=
+nextButton.textContent=
 "Go Back To Main Menu";
 
-nextBtn.onclick=
-backHome;
-
-}
-
-}
-
-function backHome(){
+nextButton.onclick=
+()=>{
 
 current=0;
 
-document
-.getElementById(
-"good"
-)
-.style.display=
+finish.style.display=
 "none";
 
-document
-.getElementById(
-"mode"
-)
-.style.display=
+home.style.display=
 "flex";
+
+};
+
+}
 
 }
 
 </script>
 
 </body>
-
 </html>
