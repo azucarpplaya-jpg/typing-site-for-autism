@@ -25,4 +25,4 @@ LearningApp.storage = {
   }
 };
 
-console.log("Part 1_1 loaded: storage system ready");
+console.log("Part 1_1 loaded: storage system ready"); 
