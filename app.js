@@ -25,7 +25,7 @@ function signup() {
     alert("Fill all fields");
     return;
   }
-
+ 
   let users = getUsers();
 
   if (users[u]) {
