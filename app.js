@@ -4,7 +4,7 @@
    ========================= */
 
 let currentUser = null;
-
+ 
 /* -------- USERS -------- */
 
 function getUsers() {
